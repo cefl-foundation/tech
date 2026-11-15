@@ -73,9 +73,6 @@ body {
 
 main { flex: 1; }
 
-
-
-
 /* Everything that is set in the heading font. */
 h1, h2, h3, h4, .unit, .slogan {
   font-family: var(--display);
@@ -149,10 +146,6 @@ a { color: inherit; }
 .nav {
   background: var(--red);
   color: var(--white);
-}
-
-.nav .wrap {
-  display: flex;
 }
 
 .nav .wrap {
