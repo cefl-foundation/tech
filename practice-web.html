@@ -33,7 +33,7 @@
   <script src="js/shell.js"></script>
   <script src="js/task-list.js"></script>
   <script src="js/task-page.js"></script>
-  <script>
+    <script>
     // What this page shows. js/shell.js draws it.
     Shell.init({
       page: "practice-web.html",
@@ -47,11 +47,20 @@
           key: "build",
           title: "Build a page",
           sub: "Week 6 · HTML and CSS",
+          icon: "M8 7l-5 5 5 5M16 7l5 5-5 5",
           text: "The Robotics Club needs a website, and you are building it one task at a time: first the page structure, then the links, image and list, then the CSS. Edit the HTML and CSS boxes, watch the preview change as you type, and keep going until every item on the checklist is green.",
           roundTwo: {
             ids: ["web-w6-07", "web-w6-08", "web-w6-09"],
             title: "Build a page: more practice",
             text: "Three more pages, each with its own look: a sign-up form for the Drone Society, a timetable for the computer labs, and a night-bus page that is almost impossible to read. Same rules: fix the HTML and CSS, watch the preview change, and stop when every item on the checklist is green."
+          },
+          watch: {
+            title: "Watch first: meet the robots",
+            intro: "Two short videos from the University of Bedfordshire: a robot dog and a humanoid robot. The website you build is for a student club that works with robots like these.",
+            videos: [
+              { id: "GFr7eIgJTuI", title: "Meet Go2: The Robotic Dog at the University of Bedfordshire", short: "Go2, the robot dog" },
+              { id: "hPcvy42bEQQ", title: "Meet Nao: The Humanoid Robot at the University of Bedfordshire", short: "Nao, the humanoid robot" }
+            ]
           }
         },
         {
@@ -59,11 +68,16 @@
           key: "inspect",
           title: "Inspect this page",
           sub: "Week 6 · Accessibility",
+          icon: "M16.5 10.5a6 6 0 1 1-12 0a6 6 0 1 1 12 0M15 15l5.5 5.5",
           text: "Three websites that look fine at first glance: a cafe, a gym and a library. Each one hides five problems that make it hard for some people to use. Open the developer tools, find the problems, and say why each one matters for a real user.",
           roundTwo: {
             ids: ["web-w6-10", "web-w6-11"],
             title: "Inspect this page: new problems",
             text: "Two more websites: the students' union's what's-on page and a phone repair shop. Some of the problems are ones you have already found three times; some are new, so read every item in the list carefully before you tick."
+          },
+          endCard: {
+            label: "The small print",
+            text: "The cafe, the gym, the library, the students' union and the repair shop are made up. Their problems, sadly, are not."
           }
         },
         {
@@ -71,11 +85,18 @@
           key: "behind",
           title: "Request and response",
           sub: "Week 7 · Behind the web",
+          icon: "M3 8h15M14 4l4 4-4 4M21 16H6M10 12l-4 4 4 4",
           text: "Type an address, press Enter and follow what happens in the next second: the browser, DNS, the request, the server, the database, the response. Then match the terms to their meanings and explain one of them in your own words.",
           roundTwo: {
             ids: ["web-w7-02"],
             title: "Logging in",
             text: "Type a username, press Log in and follow what happens: the form, the POST request, the server, the password check, the database and the cookie that keeps you logged in. Then match the terms and explain one of them in your own words."
+          },
+          endCard: {
+            label: "Any time · Extra",
+            title: "DevTools website makeover",
+            text: "Change a real page live in DevTools →",
+            href: "exercises/html-css-1/html-css-1-devtools.html"
           }
         }
       ]

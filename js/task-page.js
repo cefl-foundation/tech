@@ -28,6 +28,7 @@ const TaskPage = (function () {
       <div class="wrap task">
         <div class="brief">
           <p class="scene">${Dom.esc(group.text)}</p>
+          ${group.watch ? watchNoteHtml(group.watch) : ""}
           <h2>Your brief</h2>
           ${briefHtml(task)}
           ${wordBankHtml(task.vocabulary || [])}
@@ -61,6 +62,11 @@ const TaskPage = (function () {
           <nav class="steps" aria-label="All tasks">${squares}</nav>
         </div>
       </section>`;
+  }
+  // The reminder on the tasks of a strand that has watch-first videos.
+  function watchNoteHtml(watch) {
+    const links = watch.videos.map((video) => `<a href="https://www.youtube.com/shorts/${encodeURIComponent(video.id)}" target="_blank" rel="noopener">${Dom.esc(video.short)} (new tab)</a>`);
+    return `<p class="watch-note"><b>Have you met the robots yet?</b> If not, watch them first: ${links.join(" and ")}. Both are on <a href="${Dom.esc(settings.page)}#watch-first">the task list</a> too.</p>`;
   }
 
   // The brief: paragraphs split at blank lines. A paragraph inside ``` marks

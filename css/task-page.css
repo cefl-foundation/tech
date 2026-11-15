@@ -240,3 +240,16 @@ input, select, textarea { font: inherit; }
 @media (max-width: 640px) {
   .pager { flex-direction: column; }
 }
+
+/* ---------- the reminder to watch the videos first ---------- */
+.brief .watch-note {
+  padding: 10px 14px;
+  border: 2px solid var(--black);
+  border-left: 6px solid var(--red);
+  font-size: 15px;
+}
+
+.brief .watch-note a {
+  color: var(--red);
+  font-weight: 700;
+}

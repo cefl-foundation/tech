@@ -133,3 +133,117 @@
   .deck h2,
   .pile-head h2 { font-size: 36px; }
 }
+
+/* ---------- how the deck works ---------- */
+.deck-how {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr));
+  gap: 16px;
+  margin: 22px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.deck-how li {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 18px 20px;
+  border: 2px solid var(--black);
+}
+
+.deck-how .n {
+  flex: none;
+  color: var(--red);
+  font-family: var(--display);
+  font-size: 52px;
+  line-height: 0.8;
+}
+
+.deck-how p {
+  margin: 0;
+  color: var(--grey);
+  font-size: 15px;
+}
+
+.deck-how b {
+  display: block;
+  margin-bottom: 4px;
+  color: var(--ink);
+  font-size: 17px;
+}
+
+/* The handwritten note is set in Univers, the brand font, not in a handwriting font. */
+.deck-note {
+  display: flex;
+  align-items: flex-end;
+  gap: 6px;
+  margin: 16px 0 0;
+  color: var(--red);
+  font-size: 26px;
+  font-weight: 700;
+  line-height: 1.1;
+  transform: rotate(-2deg);
+}
+
+.deck-note svg {
+  flex: none;
+  width: 40px;
+  height: 68px;
+}
+
+/* ---------- the watch-first videos ---------- */
+.watch { padding-top: 44px; }
+
+.watch h2 { font-size: 40px; }
+
+.watch-intro {
+  max-width: 58ch;
+  margin: 6px 0 22px;
+  color: var(--grey);
+}
+
+.watch-videos {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 22px;
+}
+
+/* The videos are tall (9 by 16), so they stand like two phones. */
+.watch-videos figure {
+  width: 250px;
+  max-width: 46%;
+  margin: 0;
+  padding: 10px 10px 12px;
+  background: var(--black);
+  color: var(--white);
+}
+
+.watch-videos .lab {
+  margin: 0 0 8px;
+  color: var(--line);
+  font-size: 12px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.watch-videos iframe {
+  display: block;
+  width: 100%;
+  aspect-ratio: 9 / 16;
+  border: 0;
+  background: var(--ink);
+}
+
+.watch-videos figcaption {
+  margin-top: 10px;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.watch-videos figcaption a { color: var(--yellow); }
+
+@media (max-width: 720px) {
+  .watch h2 { font-size: 36px; }
+  .deck-note { font-size: 22px; }
+}
