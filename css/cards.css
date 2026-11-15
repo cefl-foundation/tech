@@ -76,3 +76,215 @@
   color: var(--black);
   font-weight: 700;
 }
+
+/* ---------- turning over ---------- */
+/* The faces share one grid cell. The back starts turned away, and
+   .flipped turns the whole card over. */
+.fcard { perspective: 1200px; }
+
+.fcard-inner {
+  display: grid;
+  transform-style: preserve-3d;
+  transition: transform 0.5s;
+}
+
+.fcard-inner .fcard-face {
+  grid-area: 1 / 1;
+  backface-visibility: hidden;
+  transition: visibility 0s 0.25s;   /* a face hides half-way through the turn */
+}
+
+.fcard-inner .fcard-back {
+  transform: rotateY(180deg);
+  visibility: hidden;
+}
+
+.fcard.flipped .fcard-inner { transform: rotateY(180deg); }
+.fcard.flipped .fcard-front { visibility: hidden; }
+.fcard.flipped .fcard-back { visibility: visible; }
+
+/* ---------- the front ---------- */
+.fcard-front {
+  padding: 18px 20px;
+  color: var(--white);
+  cursor: pointer;
+}
+
+.fcard.build .fcard-front { background: var(--maroon); }
+.fcard.inspect .fcard-front { background: var(--red); }
+.fcard.behind .fcard-front { background: var(--black); }
+
+.fcard-front .fcard-top {
+  flex-wrap: wrap;
+  justify-content: space-between;
+  min-height: 26px;
+}
+
+.fcard-strand {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.fcard-strand svg {
+  flex: none;
+  width: 15px;
+  height: 15px;
+}
+
+.fcard-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 8px;
+  border: 2px solid currentColor;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.fcard-chip.done {
+  border-color: var(--white);
+  background: var(--white);
+  color: var(--black);
+}
+
+.fcard-chip svg {
+  width: 12px;
+  height: 12px;
+}
+
+.fcard-main {
+  display: flex;
+  align-items: flex-end;
+  gap: 16px;
+}
+
+.fcard-num {
+  flex: none;
+  font-family: var(--display);
+  font-size: 108px;
+  line-height: 0.78;
+}
+
+.fcard-main h3 {
+  margin-bottom: 4px;
+  font-family: var(--body);
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1.2;
+  text-transform: none;
+}
+
+/* Flip, and flip back: at least 44px each way, easy to hit with a finger. */
+.fcard-flip,
+.fcard-unflip {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  min-width: 44px;
+  min-height: 44px;
+  border: 2px solid currentColor;
+  background: transparent;
+  color: inherit;
+}
+
+.fcard-flip {
+  align-self: flex-start;
+  margin-top: auto;
+  padding: 0 16px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.fcard-flip svg,
+.fcard-unflip svg {
+  width: 16px;
+  height: 16px;
+}
+
+.fcard-unflip {
+  flex: none;
+  background: var(--white);
+}
+
+.fcard-unflip:hover { background: var(--paper); }
+
+/* The word bank on the back, one label per word. */
+.fcard-words .lab {
+  margin: 0 0 6px;
+  color: var(--grey);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.fcard-words ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.fcard-words li {
+  padding: 3px 9px;
+  border: 2px solid var(--black);
+  background: var(--white);
+  font-size: 14px;
+}
+
+/* ---------- the end card of a pile ---------- */
+.fcard-end {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 14px;
+  min-height: 236px;
+  padding: 18px 20px;
+  color: var(--ink);
+  text-decoration: none;
+}
+
+.fcard-end p { margin: 0; }
+
+.fcard-end .lab {
+  color: var(--red);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.fcard-end h3 { font-size: 36px; }
+.fcard-end.note { border: 2px dashed var(--black); }
+.fcard-end.extra { background: var(--paper); }
+a.fcard-end:hover h3 { text-decoration: underline; }
+
+/* No turning for people who ask their computer for less movement:
+   the faces simply swap. */
+@media (prefers-reduced-motion: reduce) {
+  .fcard-inner { transition: none; }
+  .fcard.flipped .fcard-inner { transform: none; }
+  .fcard-inner .fcard-back { transform: none; }
+
+  .fcard-inner .fcard-face {
+    transition: none;
+    backface-visibility: visible;
+  }
+}
+
+@media (max-width: 720px) {
+  .fcard-num { font-size: 88px; }
+}
