@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Page not found - Tech Practice Hub</title>
+  <script>
+    // GitHub Pages shows this page at the address that was typed, which may be
+    // several folders deep. This sets where the links on this page start from:
+    // "/tech/" on GitHub Pages, "/" on the Mac.
+    (function () {
+      const base = document.createElement("base");
+      base.href = window.location.pathname.startsWith("/tech/") ? "/tech/" : "/";
+      document.head.appendChild(base);
+    })();
+  </script>
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+  <header class="topbar">
+    <div class="wrap">
+      <a class="logo" href="index.html">
+        <img src="assets/uob-logo.png" alt="University of Bedfordshire">
+        <span class="unit">Tech Practice Hub</span>
+      </a>
+    </div>
+  </header>
+  <nav class="nav" aria-label="Main">
+    <div class="wrap">
+      <a href="index.html">Home</a>
+      <a href="practice-python.html">Python practice</a>
+      <a href="practice-web.html">Web practice</a>
+      <a href="practice-ai.html">AI task</a>
+      <a href="index.html#resources">Resources</a>
+    </div>
+  </nav>
+
+  <main>
+    <section class="notice">
+      <div class="wrap">
+        <h1>Page not found</h1>
+        <p>This page does not exist. The link may be wrong, or the page may have moved.</p>
+        <p>Go back to the hub and choose a section from there.</p>
+        <p><a class="button primary" href="index.html">Back to the hub</a></p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="wrap">
+      <p class="slogan">Learn it in class. <span>Build it here.</span></p>
+      <p class="credit">The robot tasks on this site are inspired by Karel the Robot, created by Richard Pattis at Stanford University to teach the first steps of programming.</p>
+      <div class="row">
+        <p>&copy; Monika Pietruch, 2026<br>University of Bedfordshire - CEFL</p>
+        <p><a href="index.html#resources">Accessibility</a> <a href="index.html#resources">Privacy</a> <a href="index.html#resources">Contact</a></p>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>
