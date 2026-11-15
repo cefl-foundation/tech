@@ -17,26 +17,13 @@
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="css/base.css">
 </head>
-<body>
-  <header class="topbar">
-    <div class="wrap">
-      <a class="logo" href="index.html">
-        <img src="assets/uob-logo.png" alt="University of Bedfordshire">
-        <span class="unit">Tech Practice Hub</span>
-      </a>
-    </div>
-  </header>
-  <nav class="nav" aria-label="Main">
-    <div class="wrap">
-      <a href="index.html">Home</a>
-      <a href="practice-python.html">Python practice</a>
-      <a href="practice-web.html">Web practice</a>
-      <a href="practice-ai.html">AI task</a>
-      <a href="index.html#resources">Resources</a>
-    </div>
-  </nav>
+<body data-page="404.html">
+  <div data-layout="header"></div>
+  <div data-layout="nav"></div>
+  <script src="js/dom.js"></script>
+  <script src="js/layout.js"></script>
 
-  <main>
+  <main id="main" tabindex="-1">
     <section class="notice">
       <div class="wrap">
         <h1>Page not found</h1>
@@ -47,16 +34,7 @@
     </section>
   </main>
 
-  <footer class="footer">
-    <div class="wrap">
-      <p class="slogan">Learn it in class. <span>Build it here.</span></p>
-      <p class="credit">The robot tasks on this site are inspired by Karel the Robot, created by Richard Pattis at Stanford University to teach the first steps of programming.</p>
-      <div class="row">
-        <p>&copy; Monika Pietruch, 2026<br>University of Bedfordshire - CEFL</p>
-        <p><a href="index.html#resources">Accessibility</a> <a href="index.html#resources">Privacy</a> <a href="index.html#resources">Contact</a></p>
-      </div>
-    </div>
-  </footer>
+  <div data-layout="footer"></div>
 
 </body>
 </html>

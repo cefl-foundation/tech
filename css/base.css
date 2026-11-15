@@ -1,10 +1,7 @@
 /*
   The fonts and colours follow the University of Bedfordshire brand guidelines.
 */
-
 /* ---------- fonts ---------- */
-/* The files are in fonts/. A path in a stylesheet starts from the folder
-   the stylesheet is in (css/), so "../" goes up one level first. */
 @font-face {
   font-family: "Univers";
   src: url("../fonts/lte50138.ttf") format("truetype");   /* Univers 55 Roman */
@@ -98,7 +95,6 @@ a { color: inherit; }
 @media (max-width: 640px) {
   .wrap { padding: 0 16px; }
 }
-
 
 /* ---------- top bar ---------- */
 .topbar {
@@ -258,19 +254,36 @@ a { color: inherit; }
 .footer .row a:hover { text-decoration: underline; }
 
 /* ---------- keyboard focus ---------- */
-/* Three rings: white, black, white. Whatever is behind the link,
-   at least one of them shows. */
+/* Three rings: white, black, white. Whatever is behind the link, at least one of them shows. */
 :focus-visible {
   outline: 2px solid var(--white);
   outline-offset: 5px;
   box-shadow: 0 0 0 2px var(--white), 0 0 0 5px var(--black);
 }
 
-/* The logo link and the menu links fill their bars from edge to edge,
-   so there is no room round them: their ring is drawn inside the link. */
+/* The logo link and the menu links fill their bars from edge to edge, so there is no room round them: their ring is drawn inside the link. */
 .logo:focus-visible,
 .nav a:focus-visible {
   outline: 3px solid var(--white);
   outline-offset: -3px;
+  box-shadow: none;
+}
+
+/* ---------- skip link ---------- */
+/* The first link on every page: it jumps over the header and the menu. It waits above the top of the window until it has the keyboard focus. */
+.skip-link {
+  position: absolute;
+  top: -100px;
+  right: 16px;
+  padding: 10px 16px;
+  background: var(--white);
+  color: var(--ink);
+}
+
+.skip-link:focus { top: 16px; }
+
+/* The skip link sends the focus to <main>. That is a place on the page, not a link or a button, so it shows no ring. */
+main:focus-visible {
+  outline: none;
   box-shadow: none;
 }
