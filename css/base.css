@@ -198,6 +198,15 @@ a { color: inherit; }
   background: var(--maroon);
 }
 
+/* A <button> does not take the page's font unless it is told to. */
+button {
+  font: inherit;
+  cursor: pointer;
+}
+
+/* The hidden attribute must beat rules such as display: inline-block. */
+[hidden] { display: none !important; }
+
 /* ---------- a short message page, such as "Page not found" ---------- */
 .notice { padding: 56px 0 80px; }
 

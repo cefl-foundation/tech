@@ -34,23 +34,25 @@
         <h2>Practice</h2>
         <p class="intro">Each block matches a few weeks of the unit. Your progress appears here as you finish tasks on this computer.</p>
         <div class="cards">
-          <div class="card maroon">
+          <div class="card maroon" data-weeks="2,3,4">
             <div class="when">WEEKS 2&ndash;4</div>
             <h3>Python practice</h3>
             <p>Program a rover on Mars, a warehouse robot and an ocean drone. Functions, loops and if-statements - then your first real Python programs with variables, input and print.</p>
             <div class="foot">
+              <div class="count"></div>
               <a class="btn" href="practice-python.html">Open Python practice</a>
             </div>
           </div>
-          <div class="card red">
+          <div class="card red" data-weeks="6,7">
             <div class="when">WEEKS 6&ndash;7</div>
             <h3>How the web works</h3>
             <p>Build a small page, look inside real websites for problems, follow a request from your browser to a server and back.</p>
             <div class="foot">
+              <div class="count"></div>
               <a class="btn" href="practice-web.html">Open web practice</a>
             </div>
           </div>
-          <div class="card black">
+          <div class="card black" data-weeks="9">
             <div class="when">WEEK 9</div>
             <h3>Working with AI</h3>
             <p>Write a Python program that asks an AI a question with call_gpt() and prints the answer. Then check whether the answer is true.</p>
@@ -114,6 +116,8 @@
         <section>
           <h2>Your saved work</h2>
           <p>Your code and progress are saved only in this browser, on this computer. Nothing is sent anywhere. Reflections are posted on Padlet - use the button at the end of each task.</p>
+          <button type="button" class="button" id="clear-work">Clear my saved work</button>
+          <p id="saved-message" role="status"></p>
         </section>
         <section id="resources">
           <h2>Resources</h2>
@@ -130,5 +134,7 @@
     <div data-layout="footer"></div>
 
   <script src="js/progress.js"></script>
+  <script src="js/tasks.js"></script>
+  <script src="js/home.js"></script>
 </body>
 </html>
