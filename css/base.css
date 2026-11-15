@@ -63,7 +63,18 @@ body {
   /* The Univers files pull a space towards a capital T, V, W or Y, so
      "The Tech" looks like "TheTech". Switching kerning off cures it. */
   font-kerning: none;
+
+  /* A column as tall as the window. With "main { flex: 1; }" below, it
+     keeps the footer at the bottom of the window on a short page. */
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
 }
+
+main { flex: 1; }
+
+
+
 
 /* Everything that is set in the heading font. */
 h1, h2, h3, h4, .unit, .slogan {
@@ -86,3 +97,113 @@ a { color: inherit; }
   margin: 0 auto;
   padding: 0 24px;
 }
+
+/* ---------- top bar ---------- */
+.topbar {
+  background: var(--black);
+  color: var(--white);
+}
+
+/* A flex box, so that the logo link is only as wide as what is inside it. */
+.topbar .wrap { display: flex; }
+
+.logo {
+  display: flex;
+  align-items: center;
+  color: var(--white);
+  text-decoration: none;
+}
+
+/* The logo file has the logo's clear space built in: the empty margin on
+   every side. At this height the logo itself is 50px high. */
+.logo img {
+  width: auto;
+  height: 112px;
+}
+
+/* Bebas Neue sits a little high in its line, so the padding is 9px above
+   and 7px below: that puts the words level with the middle of the logo. */
+.logo .unit {
+  padding: 9px 20px 7px 28px;
+  border-left: 2px solid var(--grey);
+  font-size: 27px;
+  letter-spacing: 0.05em;
+  line-height: 1;
+}
+
+/* ---------- menu ---------- */
+.nav {
+  background: var(--red);
+  color: var(--white);
+}
+
+.nav .wrap {
+  display: flex;
+}
+
+/* Every link has a 4px line along the bottom. It is see-through,
+   except on the link for the page you are on. */
+.nav a {
+  padding: 15px 20px 11px;
+  border-bottom: 4px solid transparent;
+  font-size: 15px;
+  font-weight: 700;   /* white text on red is bold */
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+/* The page you are on: a darker red, and a white line as well,
+   because colour alone must never carry information. */
+.nav a[aria-current="page"] {
+  background: var(--maroon);
+  border-bottom-color: var(--white);
+}
+
+.nav a:hover {
+  background: var(--uob-green);
+  color: var(--black);
+}
+
+/* ---------- footer ---------- */
+.footer {
+  margin-top: 40px;
+  padding: 40px 0 34px;
+  background: var(--black);
+  color: var(--white);
+}
+
+.footer .slogan {
+  margin: 0;
+  font-size: 46px;
+  letter-spacing: 0.01em;
+  line-height: 0.95;
+}
+
+.footer .slogan span {
+  display: block;
+  color: var(--red);
+}
+
+.footer .credit {
+  max-width: 58ch;
+  margin: 18px 0 0;
+  color: var(--line);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.footer .row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 24px;
+  margin-top: 22px;
+  font-size: 13px;
+}
+
+.footer .row p { margin: 0; }
+.footer .row p:first-child { line-height: 1.6; }
+.footer .row a { text-decoration: none; }
+.footer .row a + a { margin-left: 22px; }
+.footer .row a:hover { text-decoration: underline; }
