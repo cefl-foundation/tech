@@ -98,6 +98,11 @@ a { color: inherit; }
   padding: 0 24px;
 }
 
+@media (max-width: 640px) {
+  .wrap { padding: 0 16px; }
+}
+
+
 /* ---------- top bar ---------- */
 .topbar {
   background: var(--black);
@@ -131,6 +136,15 @@ a { color: inherit; }
   line-height: 1;
 }
 
+@media (max-width: 640px) {
+  .logo img { height: 84px; }
+  .logo .unit {
+    padding-right: 8px;
+    padding-left: 12px;
+    font-size: 18px;
+  }
+}
+
 /* ---------- menu ---------- */
 .nav {
   background: var(--red);
@@ -139,6 +153,11 @@ a { color: inherit; }
 
 .nav .wrap {
   display: flex;
+}
+
+.nav .wrap {
+  display: flex;
+  flex-wrap: wrap;
 }
 
 /* Every link has a 4px line along the bottom. It is see-through,
@@ -162,6 +181,10 @@ a { color: inherit; }
 .nav a:hover {
   background: var(--uob-green);
   color: var(--black);
+}
+
+@media (max-width: 640px) {
+  .nav a { padding: 12px 14px 8px; }
 }
 
 /* ---------- buttons ---------- */
@@ -240,3 +263,21 @@ a { color: inherit; }
 .footer .row a { text-decoration: none; }
 .footer .row a + a { margin-left: 22px; }
 .footer .row a:hover { text-decoration: underline; }
+
+/* ---------- keyboard focus ---------- */
+/* Three rings: white, black, white. Whatever is behind the link,
+   at least one of them shows. */
+:focus-visible {
+  outline: 2px solid var(--white);
+  outline-offset: 5px;
+  box-shadow: 0 0 0 2px var(--white), 0 0 0 5px var(--black);
+}
+
+/* The logo link and the menu links fill their bars from edge to edge,
+   so there is no room round them: their ring is drawn inside the link. */
+.logo:focus-visible,
+.nav a:focus-visible {
+  outline: 3px solid var(--white);
+  outline-offset: -3px;
+  box-shadow: none;
+}
