@@ -134,13 +134,111 @@ function makeProgress(storage) {
     save(data);
   }
 
+  // ---------- code and answers ----------
+
+  // A code box calls saveCode() at every key press. Writing to storage each
+  // time would be wasteful, so changes wait here and are written once the
+  // student has stopped typing for DELAY milliseconds.
+  const DELAY = 400;
+  let waiting = {};   // changes not written yet, by task id
+  let timer = null;
+
+  // Start the wait again: each key press puts the save off by DELAY.
+  function restartTimer() {
+    clearTimeout(timer);
+    timer = setTimeout(flush, DELAY);
+  }
+
+  // The waiting change for one task, made the first time it is needed.
+  function waitingFor(taskId, task) {
+    if (!waiting[taskId]) { waiting[taskId] = { task: task }; }
+    return waiting[taskId];
+  }
+
+  // The student typed in a code box.
+  function saveCode(taskId, task, code) {
+    waitingFor(taskId, task).code = code;
+    restartTimer();
+  }
+
+  // The student changed an answer: ticked a box, chose from a list, typed
+  // in a box. `answers` holds only what changed, such as { html: "<p>Hi</p>" }.
+  function saveData(taskId, task, answers) {
+    const change = waitingFor(taskId, task);
+    change.data = Object.assign(change.data || {}, answers);
+    restartTimer();
+  }
+
+  // Write every waiting change now. The timer calls this, and so does the
+  // page when the student leaves it.
+  function flush() {
+    clearTimeout(timer);
+    const ids = Object.keys(waiting);
+    if (ids.length === 0) { return; }
+    const data = load();
+    for (const taskId of ids) {
+      const change = waiting[taskId];
+      const entry = entryFor(data, taskId, change.task);
+      if (change.code !== undefined) { entry.lastCode = change.code; }
+      if (change.data) { entry.data = Object.assign(entry.data || {}, change.data); }
+    }
+    waiting = {};
+    save(data);
+  }
+
+  // The answers saved for one task, or {} if there are none.
+  function getData(taskId) {
+    const entry = get(taskId);
+    return (entry && entry.data) ? entry.data : {};
+  }
+
+  // ---------- the home page ----------
+
+  // How many tasks are passed in each week of the task list:
+  // [{ week: 6, title: "...", done: 3, total: 11 }, ...]
+  function summary(index) {
+    const data = load();
+    const rows = [];
+    for (const week of index.weeks) {
+      let done = 0;
+      for (const task of week.tasks) {
+        if (data[task.id] && data[task.id].status === "passed") { done += 1; }
+      }
+      rows.push({ week: week.week, title: week.title, done: done, total: week.tasks.length });
+    }
+    return rows;
+  }
+
+  // ---------- starting again ----------
+
+  // Remove everything this site has saved in this browser, and drop the
+  // changes still waiting, so nothing comes back DELAY ms later. Only this
+  // site's key goes, never storage.clear(): that would empty the other hub.
+  // Returns true if it worked.
+  function clearAll() {
+    clearTimeout(timer);
+    waiting = {};
+    try {
+      storage.removeItem(KEY);
+      return true;
+    } catch (error) {
+      return false;
+    }
+  }
+
   // Only these names can be seen from outside makeProgress.
   return {
     available: available,
     get: get,
     markStarted: markStarted,
     recordAttempt: recordAttempt,
-    markPassed: markPassed
+    markPassed: markPassed,
+    saveCode: saveCode,
+    saveData: saveData,
+    getData: getData,
+    flush: flush,
+    summary: summary,
+    clearAll: clearAll
   };
 }
 
@@ -158,3 +256,13 @@ function browserStorage() {
 }
 
 const Progress = makeProgress(browserStorage());
+
+// A change still waiting when the student leaves the page is written at once.
+if (typeof window !== "undefined") {
+  window.addEventListener("pagehide", Progress.flush);
+}
+
+// In the browser this line does nothing. In Node it hands makeProgress to the tests.
+if (typeof module !== "undefined") {
+  module.exports = { makeProgress: makeProgress };
+}
