@@ -125,3 +125,72 @@
   .walk-diagram { grid-template-columns: repeat(4, 1fr); }
   .match-row { grid-template-columns: 1fr; }
 }
+
+/* ---------- the inspect task ---------- */
+.tip {
+  max-width: 58ch;
+  margin: 14px 0 0;
+  padding: 12px 14px;
+  border-left: 6px solid var(--black);
+  background: var(--paper);
+  font-size: 14px;
+}
+
+.problems {
+  margin: 10px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.problem {
+  margin-bottom: 10px;
+  padding: 12px 14px;
+  border: 2px solid var(--black);
+}
+
+.problem-top {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.problem-top input {
+  flex: none;
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  accent-color: var(--red);
+}
+
+.problem-why { margin-top: 10px; padding-left: 28px; }
+
+.problem-why label {
+  display: block;
+  margin-bottom: 4px;
+  color: var(--grey);
+  font-size: 13px;
+}
+
+.problem-why input {
+  width: 100%;
+  padding: 7px 10px;
+  border: 2px solid var(--black);
+  font: inherit;
+  font-size: 14px;
+}
+
+.problem-feedback {
+  margin: 10px 0 0 28px;
+  padding: 8px 10px;
+  border-left: 6px solid var(--red);
+  background: var(--paper);
+  font-size: 14px;
+}
+
+.problem.good { border-color: var(--green); }
+.problem.good .problem-feedback { border-left-color: var(--green); }
+.problem.bad { border-color: var(--red); }
+.problem.warn { border-color: var(--yellow); }
+.problem.warn .problem-feedback { border-left-color: var(--yellow); }
+.problem.revealed { border-color: var(--line); background: var(--paper); }
+.problem.revealed .problem-feedback { border-left-color: var(--black); background: var(--white); }
