@@ -52,6 +52,29 @@
     area.append(html.node, css.node,
       make("p", "web-note", "Tab puts in two spaces. To leave a code box with the keyboard, press Escape, then Tab."));
 
+
+    // ---------- the checklist, under the code boxes ----------
+    const meterFill = make("i");
+    const meter = make("span", "meter");
+    meter.appendChild(meterFill);
+    const score = make("b");
+    const meterWrap = make("span", "meter-wrap");
+    meterWrap.append(meter, score);
+    const head = make("div", "checklist-head");
+    head.append(make("h3", "web-heading", "Checklist"), meterWrap);
+    const list = make("ul", "checklist");
+    const items = task.checks.map(function (check) {
+      const mark = make("span", "check-mark");
+      const note = make("span", "check-note");
+      const item = make("li", "check");
+      item.append(mark, make("span", "check-label", check.label), note);
+      list.appendChild(item);
+      return { check: check, item: item, mark: mark, note: note };
+    });
+    area.append(head,
+      make("p", "web-note", "Checked from the preview as you type. An item turns green the moment it is true. The task is complete when all of them are."),
+      list);
+
     // ---------- the preview, across the page ----------
     const reset = make("button", null, "Reset to starter code");
     reset.type = "button";
@@ -116,7 +139,36 @@
           if (target !== null) { target.scrollIntoView(); }
         }
       });
+      checkPage(page);
     });
+
+
+    // Run every check on the page in the preview, and show the results.
+    let allGreen = false;
+    function checkPage(page) {
+      let passed = 0;
+      for (const row of items) {
+        const ok = Checks.passes(row.check, page, win.frame.contentWindow);
+        const note = ok ? "" : Checks.note(row.check, page);
+        // Grey: not yet. Yellow with a half: a count on its way. Green with a tick: done.
+        const onTheWay = note !== "" && row.check.exact !== 0;
+        row.item.className = "check " + (ok ? "pass" : onTheWay ? "part" : "todo");
+        Dom.text(row.mark, ok ? "✓" : onTheWay ? "½" : "");
+        Dom.text(row.note, note);
+        if (ok) { passed++; }
+      }
+      const total = items.length;
+      meterFill.style.width = Math.round(passed / total * 100) + "%";
+      Dom.text(score, passed === total ? "All " + total + " green" : passed + " of " + total);
+
+      // Say so once, when the last item turns green. Take it back if one turns grey again.
+      if (passed === total && !allGreen) {
+        Shell.taskPassed("Every item on the checklist is green. Well done!");
+      } else if (passed < total && allGreen) {
+        Shell.clearVerdict();
+      }
+      allGreen = passed === total;
+    }
 
     showPage();
   }
