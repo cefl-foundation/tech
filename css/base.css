@@ -164,6 +164,39 @@ a { color: inherit; }
   color: var(--black);
 }
 
+/* ---------- buttons ---------- */
+.button {
+  display: inline-block;
+  padding: 11px 20px;
+  border: 2px solid var(--black);
+  background: var(--white);
+  color: var(--ink);
+  text-decoration: none;
+}
+
+.button.primary {
+  border-color: var(--red);
+  background: var(--red);
+  color: var(--white);
+  font-weight: 700;
+}
+
+.button.primary:hover {
+  border-color: var(--maroon);
+  background: var(--maroon);
+}
+
+/* ---------- a short message page, such as "Page not found" ---------- */
+.notice { padding: 56px 0 80px; }
+
+.notice h1 {
+  margin-bottom: 12px;
+  font-size: clamp(44px, 9vw, 64px);
+}
+
+.notice p { max-width: 58ch; }
+
+
 /* ---------- footer ---------- */
 .footer {
   margin-top: 40px;

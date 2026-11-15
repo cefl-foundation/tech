@@ -1,0 +1,222 @@
+
+/* ---------- hero ---------- */
+.hero {
+  position: relative;
+  overflow: hidden;
+  background: var(--red);
+  color: var(--white);
+}
+
+/* The dark red shape. It is not in the HTML: CSS draws an empty box
+   behind the text and rounds it. */
+.hero::after {
+  content: "";
+  position: absolute;
+  top: -32vw;
+  right: -8vw;
+  width: 60vw;
+  height: 70vw;
+  min-width: 420px;
+  min-height: 500px;
+  max-width: 760px;
+  max-height: 880px;
+  border-radius: 50%;
+  background: var(--maroon);
+}
+
+.hero .wrap {
+  position: relative;
+  z-index: 1;
+  padding-top: 44px;
+  padding-bottom: 42px;
+}
+
+.eyebrow {
+  margin: 0 0 84px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+}
+
+.hero h1 { font-size: clamp(72px, 12vw, 150px); }
+
+.hero .lede {
+  max-width: 34ch;
+  margin: 12px 0 96px;
+  font-size: clamp(18px, 2.3vw, 24px);
+  line-height: 1.3;
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+}
+
+.chip {
+  padding: 8px 22px;
+  border: 2px solid var(--white);
+  font-family: var(--display);
+  font-kerning: normal;
+  font-size: 24px;
+  letter-spacing: 0.02em;
+  line-height: 1.2;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
+.chip.on {
+  background: var(--white);
+  color: var(--red);
+}
+
+/* ---------- sections ---------- */
+.block { padding: 48px 0 8px; }
+
+.block h2 { font-size: 46px; }
+
+.intro {
+  max-width: 58ch;
+  margin: 6px 0 22px;
+  color: var(--grey);
+}
+
+/* ---------- the four section cards ---------- */
+.cards {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  min-height: 460px;
+  padding: 24px 22px 22px;
+  color: var(--white);
+}
+
+.card.maroon { background: var(--maroon); }
+.card.red { background: var(--red); }
+.card.black { background: var(--black); }
+
+.card.outline {
+  border: 3px solid var(--black);
+  background: var(--white);
+  color: var(--ink);
+}
+
+.card .when {
+  margin-bottom: 10px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+}
+
+.card.outline .when { color: var(--grey); }
+
+.card h3 {
+  margin-bottom: 12px;
+  font-size: 40px;
+}
+
+.card p {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+/* margin-top: auto takes all the spare height, so the foot sits at the bottom. */
+.card .foot {
+  margin-top: auto;
+  padding-top: 24px;
+}
+
+.card .count {
+  margin-bottom: 10px;
+  font-size: 13px;
+}
+
+.card .btn {
+  display: block;
+  padding: 11px;
+  background: var(--white);
+  color: var(--ink);
+  text-align: center;
+  text-decoration: none;
+}
+
+.card.maroon .btn { color: var(--maroon); }
+.card.red .btn { color: var(--red); }
+
+.card.outline .btn {
+  background: var(--black);
+  color: var(--white);
+}
+
+.card .btn:hover { filter: brightness(0.94); }
+
+/* ---------- extra practice and games ---------- */
+.games {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+}
+
+.game {
+  padding: 20px 20px 18px;
+  border: 1px solid var(--line);
+}
+
+.game h3 {
+  margin-bottom: 6px;
+  font-size: 24px;
+}
+
+.game p {
+  margin: 0 0 10px;
+  font-size: 14px;
+}
+
+.game a {
+  color: var(--red);
+  font-size: 14px;
+  text-decoration: none;
+}
+
+.game a:hover { text-decoration: underline; }
+
+/* ---------- saved work and resources, side by side ---------- */
+.two {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 48px;
+  padding-bottom: 56px;
+}
+
+.two h2 { margin-bottom: 8px; }
+
+.two p {
+  max-width: 58ch;
+  margin: 0 0 16px;
+  font-size: 14px;
+}
+
+.reslist {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.reslist li { border-top: 1px solid var(--line); }
+.reslist li:last-child { border-bottom: 1px solid var(--line); }
+
+.reslist a {
+  display: flex;
+  justify-content: space-between;
+  padding: 12px 0;
+  font-size: 15px;
+  text-decoration: none;
+}
+
+.reslist a span:last-child { color: var(--red); }
