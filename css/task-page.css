@@ -1,0 +1,242 @@
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.button.black {
+  border-color: var(--black);
+  background: var(--black);
+  color: var(--white);
+  font-weight: 700;
+}
+
+/* A button that cannot be pressed at the moment. */
+.button:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+/* Boxes to type in take the page's font, as buttons already do. */
+input, select, textarea { font: inherit; }
+
+/* ---------- the red bar ---------- */
+.taskbar {
+  background: var(--red);
+  color: var(--white);
+}
+
+.taskbar .wrap {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 16px;
+  padding-top: 20px;
+  padding-bottom: 18px;
+}
+
+.taskbar .meta {
+  margin: 0 0 6px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.taskbar h1 { font-size: clamp(40px, 6vw, 64px); }
+
+/* A square for every task: white when done, black for this one. */
+.steps {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.steps a {
+  width: 24px;
+  height: 24px;
+  border: 2px solid var(--white);
+}
+
+.steps a.done { background: var(--white); }
+
+.steps a[aria-current="page"] {
+  border-color: var(--black);
+  background: var(--black);
+}
+
+/* ---------- two columns ---------- */
+/* The brief on the left, the task on the right; one column on a narrow screen. */
+.task {
+  display: grid;
+  grid-template-columns: minmax(300px, 5fr) minmax(0, 7fr);
+  gap: 36px;
+  padding-top: 32px;
+  padding-bottom: 48px;
+}
+
+@media (max-width: 900px) {
+  .task {
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+}
+
+/* ---------- the brief ---------- */
+.brief h2 {
+  margin-bottom: 10px;
+  font-size: 30px;
+}
+
+.brief p {
+  max-width: 58ch;
+  margin: 0 0 14px;
+  line-height: 1.6;
+}
+
+.brief p b { font-weight: 700; }
+
+/* What the whole strand is about, in a grey panel. */
+.brief .scene {
+  padding: 12px 14px;
+  border-left: 6px solid var(--black);
+  background: var(--paper);
+  font-size: 15px;
+}
+
+/* Sample code in a brief, in the computer's own monospace font. */
+.brief .sample {
+  margin: 0 0 14px;
+  padding: 10px 12px;
+  background: var(--black);
+  color: var(--white);
+  font: 14px/1.5 var(--mono);
+  white-space: pre-wrap;
+}
+
+/* ---------- the word bank: each word opens to show its meaning ---------- */
+.wordbank { margin-top: 20px; }
+
+.wordbank h3 {
+  margin-bottom: 4px;
+  font-size: 26px;
+}
+
+.wordbank details { border-top: 1px solid var(--line); }
+.wordbank details:last-child { border-bottom: 1px solid var(--line); }
+
+.wordbank summary {
+  display: flex;
+  justify-content: space-between;
+  padding: 9px 0;
+  font-weight: 700;
+  list-style: none;
+  cursor: pointer;
+}
+
+.wordbank summary::-webkit-details-marker { display: none; }
+
+.wordbank summary::after {
+  content: "+";
+  color: var(--red);
+  font-family: var(--display);
+  font-size: 22px;
+  line-height: 0.8;
+}
+
+.wordbank details[open] summary::after { content: "–"; }
+
+.wordbank details p {
+  margin: 0 0 12px;
+  font-size: 15px;
+}
+
+/* ---------- the hints, one button each ---------- */
+.hints { margin-top: 20px; }
+
+.hints h3 {
+  margin-bottom: 6px;
+  font-size: 26px;
+}
+
+.hint-button {
+  display: block;
+  width: 100%;
+  margin-bottom: 6px;
+  padding: 9px 12px;
+  border: 2px solid var(--black);
+  background: var(--white);
+  color: var(--ink);
+  text-align: left;
+}
+
+.hint-button:hover { background: var(--paper); }
+
+.brief .hint {
+  margin: 0 0 8px;
+  padding: 8px 12px;
+  border-left: 6px solid var(--red);
+  background: var(--paper);
+  font-size: 15px;
+}
+
+/* ---------- the task itself ---------- */
+/* The stage: a box across the page, above the two columns. It is hidden
+   until a task type asks for it with Shell.stage(). */
+.task-stage { margin-top: 28px; }
+
+/* The note shown until a task type has its own file. */
+.not-ready {
+  margin: 0;
+  padding: 18px 20px;
+  border: 2px dashed var(--line);
+  color: var(--grey);
+}
+
+/* ---------- the result box, under the task ---------- */
+/* Hidden until the task has something to say. The heading says what kind
+   of result it is, so the colour is never the only sign. */
+.result {
+  display: none;
+  margin-top: 14px;
+  padding: 14px 16px;
+  border: 3px solid var(--black);
+}
+
+.result.good,
+.result.bad,
+.result.neutral { display: block; }
+
+.result.good { border-color: var(--green); }
+.result.neutral { border-color: var(--yellow); }
+
+.result.bad {
+  border-color: var(--red);
+  background: var(--paper);
+}
+
+.result h3 {
+  margin-bottom: 4px;
+  font-size: 26px;
+}
+
+.result.bad h3 { color: var(--red); }
+.result p { margin: 0; }
+.result .next { margin-top: 10px; }
+
+/* ---------- the pager ---------- */
+.pager {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 28px;
+}
+
+@media (max-width: 640px) {
+  .pager { flex-direction: column; }
+}

@@ -41,6 +41,7 @@
   --yellow: #FFB81C;      /* warning: black text on it */
   --display: "Bebas Neue", "Arial Narrow", Impact, sans-serif;
   --body: "Univers", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --mono: Menlo, Consolas, "Liberation Mono", monospace;   /* code */
 }
 
 /* ---------- page defaults ---------- */
