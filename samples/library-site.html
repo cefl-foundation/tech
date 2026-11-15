@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<!--
+  samples/library-site.html — a deliberately flawed page for the "Inspect this page"
+  task. It contains five problems for students to find (marked with
+  data-flaw so samples/reveal.js can highlight them with ?reveal=1):
+  an image with no alt text, a heading that jumps from h1 to h4, grey text
+  on grey, a "button" made from a div, and an input with no label.
+  Do not "fix" this file — the flaws are the point.
+-->
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Riverside Library</title>
+  <style>
+    /* A calm library look: pale blue, navy, serif text and thin rules. */
+    body { font-family: Georgia, "Times New Roman", serif; margin: 0; color: #1C2B3A; background: #EEF4FA; }
+    header { background: #1F3A5F; color: #fff; padding: 1.2rem 1.5rem; }
+    header h1 { margin: 0; font-size: 1.8rem; font-weight: 400; letter-spacing: .02em; border-left: 6px solid #8FB8DE; padding-left: .8rem; }
+    main { padding: 1.4rem 1.5rem; max-width: 700px; background: #fff; margin: 1.2rem 1.5rem; border: 1px solid #C9D9E8; line-height: 1.55; }
+    main > p:first-child { font-size: 1.1rem; color: #1F3A5F; }
+    img { display: block; margin: 0.5rem 0 1rem; border: 1px solid #C9D9E8; padding: 6px; background: #EEF4FA; }
+    h4 { margin: 1.2rem 0 0.4rem; font-size: 1.2rem; font-weight: 400; color: #1F3A5F; text-transform: uppercase; letter-spacing: .12em; font-family: "Segoe UI", Helvetica, Arial, sans-serif; font-size: .95rem; }
+    ul { padding-left: 0; list-style: none; }
+    li { border-bottom: 1px solid #C9D9E8; padding: .35rem 0; }
+    .info { background: #d9d9d9; color: #9a9a9a; padding: 0.8rem 1rem; border-radius: 6px; margin: 1rem 0; font-family: Arial, sans-serif; font-size: .95rem; }
+    .btn { display: inline-block; background: #C8102E; color: #fff; padding: 0.55rem 1.1rem; cursor: pointer; margin: 0.5rem 0 1rem; font-family: "Segoe UI", Helvetica, Arial, sans-serif; font-weight: 700; border-radius: 3px; }
+    form { margin-top: 1rem; border-top: 1px solid #C9D9E8; padding-top: 1rem; }
+    input { padding: 0.5rem 0.7rem; border: 1px solid #8FB8DE; border-radius: 3px; width: 60%; font: inherit; }
+    button { padding: 0.5rem 1rem; border: none; background: #1F3A5F; color: #fff; border-radius: 3px; font: inherit; }
+    footer { padding: 1rem 1.5rem 1.4rem; font-size: 0.85rem; color: #4A5D70; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Riverside Library</h1>
+  </header>
+  <main>
+    <p>Books, computers, study space and free events. Everyone is welcome, and membership is free.</p>
+
+    <img src="img/books.svg" width="160" height="120" data-flaw="alt" />
+
+    <h4 data-flaw="heading">Opening hours</h4>
+    <ul>
+      <li>Monday to Friday — 9 am to 7 pm</li>
+      <li>Saturday — 10 am to 4 pm</li>
+      <li>Sunday — closed</li>
+    </ul>
+
+    <p class="info" data-flaw="contrast">You can borrow up to 12 books at a time for three weeks. Renew online or by phone. Study rooms can be booked at the front desk.</p>
+
+    <div class="btn" onclick="this.textContent='Thanks!'" data-flaw="divbutton">Renew a book</div>
+
+    <form onsubmit="return false">
+      <input type="text" placeholder="Library card number" data-flaw="label" />
+      <button type="submit">Send</button>
+    </form>
+  </main>
+  <footer>Riverside Library · Bedford</footer>
+  <script src="reveal.js?v=2"></script>
+</body>
+</html>
