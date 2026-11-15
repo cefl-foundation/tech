@@ -1,0 +1,78 @@
+
+.fcards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(340px, 100%), 1fr));
+  gap: 16px;
+}
+
+/* A grid of one cell: what is inside fills the card, so the cards in a
+   row are all as tall as the tallest. */
+.fcard { display: grid; }
+
+.fcard-face {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-height: 236px;
+}
+
+/* ---------- the back: a ruled index card ---------- */
+/* Grey lines every 28px, and a red line under the top. */
+.fcard-back {
+  padding: 12px 18px 16px;
+  border: 3px solid var(--black);
+  background-color: var(--white);
+  background-image: repeating-linear-gradient(transparent 0, transparent 27px, var(--line) 27px, var(--line) 28px);
+  color: var(--ink);
+}
+
+.fcard-top {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 44px;
+}
+
+.fcard-back .fcard-top {
+  padding-bottom: 8px;
+  border-bottom: 2px solid var(--red);
+}
+
+.fcard-back h3 {
+  flex: 1;
+  font-family: var(--body);
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1.2;
+  text-transform: none;
+}
+
+/* The state of the task, in words as well as in colour. */
+.fcard-tag {
+  flex: none;
+  padding: 4px 10px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.fcard-tag.todo { background: var(--black); color: var(--white); }
+.fcard-tag.next { background: var(--yellow); color: var(--black); }
+.fcard-tag.done { background: var(--green); color: var(--white); }
+
+.fcard-concept {
+  margin: 0;
+  color: var(--grey);
+  font-size: 15px;
+}
+
+/* margin-top: auto pushes the button to the bottom of the card. */
+.fcard-actions { margin-top: auto; }
+
+.button.start {
+  border-color: var(--yellow);
+  background: var(--yellow);
+  color: var(--black);
+  font-weight: 700;
+}
