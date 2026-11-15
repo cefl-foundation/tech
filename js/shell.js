@@ -5,6 +5,8 @@ const Shell = (function () {
   const main = document.getElementById("main");
   let settings = null;   // what the page handed to init()
   let list = [];         // this page's tasks, in teaching order
+  const drawers = {};    // the function that draws each task type
+  let current = null;    // on a task page: the task, and its place in the list
 
   // ---------- helpers for both screens ----------
 
@@ -19,12 +21,90 @@ const Shell = (function () {
     return Boolean(saved) && saved.status === "passed";
   }
 
+  // The strand a task belongs to: the one with the same task type.
+  function strandFor(entry) {
+    return settings.strands.find((strand) => strand.type === entry.type);
+  }
+
+  // A task is in round two when its strand's roundTwo list names it.
+  function isRoundTwo(entry) {
+    const round = strandFor(entry).roundTwo;
+    return Boolean(round) && round.ids.includes(entry.id);
+  }
+
   // 7 gives "07", so that every task number has two digits.
   function pad2(n) {
     return String(n).padStart(2, "0");
   }
 
+  // ---------- for the task types ----------
+
+  // A task type's file hands over the function that draws it:
+  // Shell.addType("walkthrough", draw). When a task of that type opens,
+  // the shell calls draw(task, area). area is the empty right-hand column.
+  function addType(type, draw) {
+    drawers[type] = draw;
+  }
+
+  // Draw the task itself, or a note if its task type has no file yet.
+  function drawTask(task) {
+    const area = document.getElementById("task-area");
+    const draw = drawers[task.type];
+    if (draw) {
+      draw(task, area);
+    } else {
+      area.appendChild(Dom.make("p", "not-ready", "This part of the page is still being built."));
+    }
+  }
+
+  // The box across the page, above the two columns. It stays hidden
+  // until a task type asks for it.
+  function stage() {
+    const box = document.getElementById("task-stage");
+    box.hidden = false;
+    return box;
+  }
+
+  // The heading of the result box for each kind of result.
+  const HEADINGS = { good: "Well done", bad: "Not there yet", neutral: "Note" };
+
+  // Show a result under the task. kind is "good", "bad" or "neutral".
+  // Gives back the box, so that taskPassed() can add a link to it.
+  function showVerdict(kind, message, heading) {
+    const box = document.getElementById("task-result");
+    box.className = "result " + kind;
+    Dom.clear(box);
+    box.append(Dom.make("h3", null, heading || HEADINGS[kind]), Dom.make("p", null, message));
+    box.scrollIntoView({ block: "nearest" });
+    return box;
+  }
+
+  // Empty the result box and hide it again.
+  function clearVerdict() {
+    const box = document.getElementById("task-result");
+    box.className = "result";
+    Dom.clear(box);
+  }
+
+  // The task is complete: save that, say so, and show the way on.
+  // Calling it again does no harm: a passed task stays passed.
+  function taskPassed(message) {
+    Progress.markPassed(current.task.id, current.task);
+    const next = list[current.at + 1];
+    const link = Dom.make("a", "button primary", next ? `Next: task ${current.at + 2}, ${next.title} →` : "Back to all tasks →");
+    link.href = next ? urlFor(next) : settings.page;
+    const line = Dom.make("p", "next");
+    line.appendChild(link);
+    showVerdict("good", message, "Task complete").appendChild(line);
+  }
+
   // ---------- start ----------
+
+  // The task id in the address: "web-w6-01" for "practice-web.html?task=web-w6-01",
+  // or null when the address has no ?task= part.
+  function taskIdFromUrl() {
+    return new URLSearchParams(window.location.search).get("task");
+  }
 
   // Shown when the tasks cannot be loaded.
   function errorPage(message) {
@@ -49,7 +129,18 @@ const Shell = (function () {
         if (list.length === 0) {
           throw new Error("tasks/index.json has no tasks for this page yet.");
         }
-        TaskList.draw(main, settings, list);
+        // The address chooses the screen: one task, or the list.
+        const at = list.findIndex((entry) => entry.id === taskIdFromUrl());
+        if (at === -1) {
+          TaskList.draw(main, settings, list);
+          return;
+        }
+        return Tasks.loadTask(list[at].id).then(function (task) {
+          current = { task: task, at: at };
+          TaskPage.draw(main, settings, list, task, at);
+          Progress.markStarted(task.id, task);
+          drawTask(task);
+        });
       })
       .catch(function (error) {
         console.error(error);   // the red line in the browser's Console, with the file and line
@@ -57,11 +148,18 @@ const Shell = (function () {
       });
   }
 
-  // The names the screens and the page can use.
+  // The names the two screens, the page and the task types can use.
   return {
     init: init,
     urlFor: urlFor,
     isDone: isDone,
-    pad2: pad2
+    strandFor: strandFor,
+    isRoundTwo: isRoundTwo,
+    pad2: pad2,
+    addType: addType,
+    stage: stage,
+    showVerdict: showVerdict,
+    clearVerdict: clearVerdict,
+    taskPassed: taskPassed
   };
 })();

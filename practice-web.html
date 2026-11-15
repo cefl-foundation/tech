@@ -8,6 +8,7 @@
   <link rel="stylesheet" href="css/base.css">
   <link rel="stylesheet" href="css/task-list.css">
   <link rel="stylesheet" href="css/cards.css">
+  <link rel="stylesheet" href="css/task-page.css">
 </head>
 <body>
   <div data-layout="header"></div>
@@ -31,6 +32,7 @@
   <script src="js/progress.js"></script>
   <script src="js/shell.js"></script>
   <script src="js/task-list.js"></script>
+  <script src="js/task-page.js"></script>
   <script>
     // What this page shows. js/shell.js draws it.
     Shell.init({
@@ -44,19 +46,37 @@
           type: "html-editor",
           key: "build",
           title: "Build a page",
-          sub: "Week 6 · HTML and CSS"
+          sub: "Week 6 · HTML and CSS",
+          text: "The Robotics Club needs a website, and you are building it one task at a time: first the page structure, then the links, image and list, then the CSS. Edit the HTML and CSS boxes, watch the preview change as you type, and keep going until every item on the checklist is green.",
+          roundTwo: {
+            ids: ["web-w6-07", "web-w6-08", "web-w6-09"],
+            title: "Build a page: more practice",
+            text: "Three more pages, each with its own look: a sign-up form for the Drone Society, a timetable for the computer labs, and a night-bus page that is almost impossible to read. Same rules: fix the HTML and CSS, watch the preview change, and stop when every item on the checklist is green."
+          }
         },
         {
           type: "inspect",
           key: "inspect",
           title: "Inspect this page",
-          sub: "Week 6 · Accessibility"
+          sub: "Week 6 · Accessibility",
+          text: "Three websites that look fine at first glance: a cafe, a gym and a library. Each one hides five problems that make it hard for some people to use. Open the developer tools, find the problems, and say why each one matters for a real user.",
+          roundTwo: {
+            ids: ["web-w6-10", "web-w6-11"],
+            title: "Inspect this page: new problems",
+            text: "Two more websites: the students' union's what's-on page and a phone repair shop. Some of the problems are ones you have already found three times; some are new, so read every item in the list carefully before you tick."
+          }
         },
         {
           type: "walkthrough",
           key: "behind",
           title: "Request and response",
-          sub: "Week 7 · Behind the web"
+          sub: "Week 7 · Behind the web",
+          text: "Type an address, press Enter and follow what happens in the next second: the browser, DNS, the request, the server, the database, the response. Then match the terms to their meanings and explain one of them in your own words.",
+          roundTwo: {
+            ids: ["web-w7-02"],
+            title: "Logging in",
+            text: "Type a username, press Log in and follow what happens: the form, the POST request, the server, the password check, the database and the cookie that keeps you logged in. Then match the terms and explain one of them in your own words."
+          }
         }
       ]
     });
