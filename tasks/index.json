@@ -1,6 +1,19 @@
 {
   "weeks": [
     {
+      "week": 3,
+      "title": "Python basics",
+      "tasks": [
+        {
+          "id": "console-w3-01",
+          "type": "console",
+          "file": "console/w3-01.json",
+          "title": "Hello, world",
+          "concept": "The print function"
+        }
+      ]
+    },
+    {
       "week": 6,
       "title": "The frontend: HTML, CSS and accessibility",
       "tasks": [

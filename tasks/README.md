@@ -8,10 +8,11 @@ file, add a line to the index, done.
 ```
 tasks/
   index.json    the list of tasks, grouped by week (order matters)
+  console/      type "console": Python programs that print text, week 3
   web/          types "html-editor", "inspect" and "walkthrough", weeks 6 and 7
 ```
 
-The Python and AI tasks get folders of their own when they move in.
+The robot and AI tasks get folders of their own when they move in.
 
 `tests/tasks.test.js` checks that the index and the files agree. Run it
 from the repository folder with `node --test`.

@@ -132,7 +132,9 @@ const Shell = (function () {
         // The address chooses the screen: one task, or the list.
         const at = list.findIndex((entry) => entry.id === taskIdFromUrl());
         if (at === -1) {
-          TaskList.draw(main, settings, list);
+          // Flip cards, unless the page handed over another list screen.
+          const screen = settings.listScreen || TaskList;
+          screen.draw(main, settings, list);
           return;
         }
         return Tasks.loadTask(list[at].id).then(function (task) {
