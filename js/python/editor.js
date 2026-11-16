@@ -41,14 +41,21 @@ const Editor = (function () {
 
     // ---------- line numbers ----------
 
+    let errorLine = 0;   // the line shown in red, or 0 for none
+
     // One number for each line of code, scrolled level with the code.
     function renumber() {
       const count = code.value.split("\n").length;
       Dom.clear(gutter);
       for (let n = 1; n <= count; n++) {
-        gutter.appendChild(make("span", null, n));
+        gutter.appendChild(make("span", n === errorLine ? "error" : null, n));
       }
       gutter.scrollTop = code.scrollTop;
+    }
+
+    function markLine(n) {
+      errorLine = n || 0;
+      renumber();
     }
 
     // The box is as tall as its code, so the code should never scroll up
@@ -57,7 +64,7 @@ const Editor = (function () {
       gutter.scrollTop = code.scrollTop;
     });
 
-        // ---------- the locked lines ----------
+    // ---------- the locked lines ----------
 
     const lock = EditorLock.lockRegions(options.starter);
     // Saved code that has lost a locked line gets it back.
@@ -178,9 +185,10 @@ const Editor = (function () {
       leaving = false;
     });
 
-    // After every change: the numbers are counted again, and the page is
-    // told.
+    // After every change: no line is marked any more, the numbers are
+    // counted again, and the page is told.
     code.addEventListener("input", function () {
+      errorLine = 0;
       renumber();
       options.onChange(code.value);
     });
@@ -195,7 +203,8 @@ const Editor = (function () {
     return {
       node: node,
       note: note,
-      getCode: function () { return code.value; }
+      getCode: function () { return code.value; },
+      markLine: markLine
     };
   }
 
