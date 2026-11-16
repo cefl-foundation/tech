@@ -119,6 +119,15 @@ input, select, textarea { font: inherit; }
   white-space: pre-wrap;
 }
 
+/* Code inside a sentence: what a task file puts between two ` marks. */
+.task code {
+  padding: 1px 4px;
+  border: 1px solid var(--line);
+  background: var(--paper);
+  font-family: var(--mono);
+  font-size: 0.9em;
+}
+
 /* ---------- the word bank: each word opens to show its meaning ---------- */
 .wordbank { margin-top: 20px; }
 

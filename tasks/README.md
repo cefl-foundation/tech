@@ -58,6 +58,11 @@ title in the task list.
 | `vocabulary` | terms with a one-line gloss; shown beside the brief |
 | `hints` | revealed one at a time. Two to four while the site is being rebuilt; three each after the task-by-task review |
 
+Inside a sentence of a `brief`, a hint or a gloss, text between two
+backticks is shown as code:
+
+    "hints": ["Use `print()` to show the text."]
+
 Anyone can read these files on GitHub, solutions included, so put nothing
 secret in them.
 

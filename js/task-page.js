@@ -70,7 +70,8 @@ const TaskPage = (function () {
   }
 
   // The brief: paragraphs split at blank lines. A paragraph inside ``` marks
-  // is sample code, shown as it is. Words from the word bank are in bold.
+    // is sample code, shown as it is. Inside a sentence, text between two
+  // ` marks is code too. Words from the word bank are in bold.
   function briefHtml(task) {
     const terms = (task.vocabulary || []).map((word) => word.term);
     let html = "";
@@ -79,7 +80,7 @@ const TaskPage = (function () {
       if (code) {
         html += `<pre class="sample">${Dom.esc(code[1])}</pre>`;
       } else {
-        html += `<p>${boldTerms(Dom.esc(paragraph), terms)}</p>`;
+        html += `<p>${Dom.code(paragraph, (safe) => boldTerms(safe, terms))}</p>`;
       }
     }
     return html;
@@ -106,7 +107,7 @@ const TaskPage = (function () {
     if (vocabulary.length === 0) { return ""; }
     let html = `<div class="wordbank"><h3>Word bank</h3>`;
     for (const word of vocabulary) {
-      html += `<details><summary>${Dom.esc(word.term)}</summary><p>${Dom.esc(word.gloss)}</p></details>`;
+      html += `<details><summary>${Dom.esc(word.term)}</summary><p>${Dom.code(word.gloss)}</p></details>`;
     }
     return html + `</div>`;
   }
@@ -119,7 +120,7 @@ const TaskPage = (function () {
     hints.forEach(function (hint, i) {
       html += `
         <button type="button" class="hint-button" data-hint="${i}"${i > 0 ? " hidden" : ""}>Show hint ${i + 1}</button>
-        <p class="hint" id="hint-${i}" hidden>${Dom.esc(hint)}</p>`;
+        <p class="hint" id="hint-${i}" hidden>${Dom.code(hint)}</p>`;
     });
     return html + `</div>`;
   }
