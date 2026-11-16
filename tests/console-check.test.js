@@ -95,3 +95,8 @@ test("a broken pattern in a task file counts as not met, and nothing crashes", (
 test("a task with no tests is never passed", () => {
   assert.equal(check({ tests: [] }, RIGHT).passed, false);
 });
+
+test("a word in a comment does not count for requires", () => {
+  const code = program(["# int() comes later", 'print("hello")']);
+  assert.deepEqual(missing(task, code), ["Convert the text with `int()`."]);
+});

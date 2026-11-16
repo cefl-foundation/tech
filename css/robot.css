@@ -1,0 +1,163 @@
+
+/* ---------- the stage: pictures, buttons and message ---------- */
+.robot-stage {
+  margin-top: -10px;
+  padding: 10px 0 14px;
+  background: var(--white);
+  color: var(--ink);
+}
+
+/* The stage stays at the top of the window while a long program is
+   scrolled, so that the robot can be watched beside the code.
+   js/python/robot-screen.js adds this class when there is room. */
+.robot-stage.sticks {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+}
+
+/* ---------- the two pictures ---------- */
+.worlds {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+@media (max-width: 560px) {
+  .worlds { grid-template-columns: 1fr; }
+}
+
+.worldbox {
+  min-width: 0;
+  border: 3px solid var(--black);
+}
+
+.worldbox h2 {
+  padding: 7px 10px 5px;
+  background: var(--black);
+  color: var(--white);
+  font-size: 20px;
+  letter-spacing: 0.04em;
+  line-height: 1.2;
+}
+
+.worldbox.goal h2 { background: var(--maroon); }
+
+/* The picture fills the width of its box and keeps its shape. */
+.worldbox svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* Under the picture: where the robot is, or where it must finish. */
+.world-note {
+  margin: 0;
+  padding: 6px 10px;
+  font-size: 14px;
+}
+
+/* The picture in words: closed until someone opens it. */
+.world-words {
+  border-top: 1px solid var(--line);
+  font-size: 14px;
+}
+
+.world-words summary {
+  padding: 6px 10px;
+  cursor: pointer;
+}
+
+.world-words p {
+  margin: 0;
+  padding: 0 10px 10px;
+}
+
+/* ---------- the buttons and the speed control ---------- */
+/* The row itself is .py-runrow in css/python.css. Here it sits inside
+   the stage, so its space is above it and not below. */
+.robot-stage .py-runrow {
+  align-items: center;
+  margin: 14px 0 0;
+}
+
+.robot-speed {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+  font-size: 14px;
+}
+
+.robot-speed input {
+  width: 110px;
+  accent-color: var(--red);
+}
+
+/* On a phone the speed control drops to a line of its own, on the left. */
+@media (max-width: 560px) {
+  .robot-speed { margin-left: 0; }
+}
+
+/* ---------- the message under the buttons ---------- */
+/* Three kinds, each with its own words as well as its own colour. */
+.robot-status {
+  margin: 12px 0 0;
+  padding: 10px 14px;
+  border: 3px solid var(--line);
+}
+
+.robot-status:empty { display: none; }
+
+.robot-status.good { border-color: var(--green); }
+.robot-status.neutral { border-color: var(--yellow); }
+
+.robot-status.bad {
+  border-color: var(--red);
+  background: var(--paper);
+}
+
+.robot-status.bad strong { color: var(--red); }
+
+/* ---------- the list of commands ---------- */
+.robot-commands {
+  margin-bottom: 14px;
+  border: 1px solid var(--line);
+  font-size: 14px;
+}
+
+.robot-commands summary {
+  padding: 9px 12px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.robot-commands-lists {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0 20px;
+  padding: 0 12px 10px;
+}
+
+@media (max-width: 560px) {
+  .robot-commands-lists { grid-template-columns: 1fr; }
+}
+
+.robot-commands h3 {
+  margin-bottom: 4px;
+  font-size: 20px;
+}
+
+.robot-commands ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.robot-commands li { padding: 2px 0; }
+
+.robot-tip {
+  margin: 8px 0 0;
+  color: var(--grey);
+  font-size: 14px;
+}
