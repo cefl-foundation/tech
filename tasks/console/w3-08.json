@@ -1,0 +1,62 @@
+{
+  "id": "console-w3-08",
+  "week": 3,
+  "type": "console",
+  "title": "Pass or fail?",
+  "brief": "The ocean drone used an if-else statement to choose between two paths. An ordinary program can decide in the same way. The condition is a comparison, such as `mark >= 40`, which is either `True` or `False`.\n\nAsk the user for a mark with `input()`. If the mark is 40 or more, print `Pass`. If it is less than 40, print `Fail`.\n\nFor the mark 40, the terminal must show exactly this:\n\n```\nEnter the mark: 40\nPass\n```",
+  "vocabulary": [
+    {
+      "term": "condition",
+      "gloss": "a question that is `True` or `False`, like `mark >= 40`"
+    },
+    {
+      "term": "if-else statement",
+      "gloss": "a decision with two paths: one block runs if the condition is true, the `else` block runs if it is false."
+    },
+    {
+      "term": "convert",
+      "gloss": "change a value from one type to another, for example `int(\"9\")` turns the string `\"9\"` into the integer `9`."
+    },
+    {
+      "term": "integer",
+      "gloss": "a whole number with no decimal point, such as `7` or `-2`. In Python this type is called `int`."
+    }
+  ],
+  "starterCode": "\"\"\"\nFile: pass_or_fail.py\n---------------------\nAsk for a mark, then print Pass (40 or more) or Fail (less than 40).\n\"\"\"\n\n\ndef main():\n    mark = int(input(\"Enter the mark: \"))\n    # decide here: print Pass or print Fail\n\n\nif __name__ == '__main__':\n    main()\n",
+  "tests": [
+    {
+      "name": "says Pass for 40",
+      "stdin": [
+        "40"
+      ],
+      "expectedStdout": "Enter the mark: 40\nPass\n"
+    },
+    {
+      "name": "says Fail for 39",
+      "stdin": [
+        "39"
+      ],
+      "expectedStdout": "Enter the mark: 39\nFail\n"
+    },
+    {
+      "name": "says Pass for 72",
+      "stdin": [
+        "72"
+      ],
+      "expectedStdout": "Enter the mark: 72\nPass\n"
+    }
+  ],
+  "requires": [
+    {
+      "pattern": "\\belse\\b",
+      "message": "Use `else` for the marks under 40, so that the program has two paths."
+    }
+  ],
+  "hints": [
+    "The starter code already asks for the mark and converts it to an integer. Compare it with 40: `if mark >= 40:` - remember the colon.",
+    "`else:` goes at the same level of indentation as `if`, and it has a colon too. It needs no condition of its own.",
+    "The shape is four lines: `if mark >= 40:`, then an indented `print(\"Pass\")`, then `else:`, then an indented `print(\"Fail\")`."
+  ],
+  "reflect": "Which line of your program is the condition? What does the program print for a mark of exactly 40, and why?",
+  "solution": "\"\"\"\nFile: pass_or_fail.py\n---------------------\nAsk for a mark, then print Pass (40 or more) or Fail (less than 40).\n\"\"\"\n\n\ndef main():\n    mark = int(input(\"Enter the mark: \"))\n    if mark >= 40:\n        print(\"Pass\")\n    else:\n        print(\"Fail\")\n\n\nif __name__ == '__main__':\n    main()\n"
+}

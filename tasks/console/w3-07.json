@@ -1,0 +1,46 @@
+{
+  "id": "console-w3-07",
+  "week": 3,
+  "type": "console",
+  "title": "The five times table",
+  "brief": "You have used a for loop to make the warehouse robot repeat its commands. A for loop can count for you as well. `range(1, 11)` gives the numbers 1, 2, 3 and so on up to 10, one number for each iteration, and the variable in the loop holds the number of the turn you are on.\n\nUse a for loop to print the five times table, from 1 times 5 up to 10 times 5. Print one line for each, in exactly this form:\n\n```\n1 x 5 = 5\n2 x 5 = 10\n```\n\nand so on, up to `10 x 5 = 50`. Use a small letter x, with a space on each side. Do not type ten print lines - let the loop do the counting.",
+  "vocabulary": [
+    {
+      "term": "for loop",
+      "gloss": "a loop that repeats a block of code a specific number of times: `for i in range(4):`"
+    },
+    {
+      "term": "body of the loop",
+      "gloss": "the indented lines inside the loop - the code that runs every time the loop repeats."
+    },
+    {
+      "term": "iterate",
+      "gloss": "to repeat a process. One repetition is called an iteration."
+    },
+    {
+      "term": "range(1, 11)",
+      "gloss": "the numbers 1, 2, 3 … 10 (the last number, 11, is not included)"
+    }
+  ],
+  "starterCode": "\"\"\"\nFile: five_times_table.py\n-------------------------\nPrint the five times table, from 1 x 5 to 10 x 5.\n\"\"\"\n\n\ndef main():\n    pass\n\n\nif __name__ == '__main__':\n    main()\n",
+  "tests": [
+    {
+      "name": "prints the whole table",
+      "stdin": [],
+      "expectedStdout": "1 x 5 = 5\n2 x 5 = 10\n3 x 5 = 15\n4 x 5 = 20\n5 x 5 = 25\n6 x 5 = 30\n7 x 5 = 35\n8 x 5 = 40\n9 x 5 = 45\n10 x 5 = 50\n"
+    }
+  ],
+  "requires": [
+    {
+      "pattern": "\\bfor\\b",
+      "message": "Use a `for` loop to count from 1 to 10, rather than ten print lines."
+    }
+  ],
+  "hints": [
+    "A for loop with `range()` counts for you: `for i in range(1, 11):` - remember the colon, and indent the line inside the loop by 4 more spaces.",
+    "Inside the loop, `i` is 1 the first time, then 2, then 3, up to 10. The answer for each line is `i * 5`.",
+    "Print each line with commas: `print(i, \"x 5 =\", i * 5)`"
+  ],
+  "reflect": "How many times does the body of your loop run? What would you change to print the table up to 12 x 5?",
+  "solution": "\"\"\"\nFile: five_times_table.py\n-------------------------\nPrint the five times table, from 1 x 5 to 10 x 5.\n\"\"\"\n\n\ndef main():\n    for i in range(1, 11):\n        print(i, \"x 5 =\", i * 5)\n\n\nif __name__ == '__main__':\n    main()\n"
+}
