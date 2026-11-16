@@ -1,0 +1,58 @@
+{
+  "id": "wh-3",
+  "week": 2,
+  "type": "robot",
+  "world": "warehouse",
+  "title": "Five per corner",
+  "concepts": ["Helper functions with loops"],
+  "brief": "Same storage area, but now each corner needs a stack of five parcels. The robot can put several parcels on the same square, one on top of the other.\n\nCombine what you have learnt: write a helper function `put_five_parcels()` that uses a for loop to put down five parcels, and a helper function `move_to_next_corner()` that drives to the next corner and turns left. Then `main()` repeats those two calls four times.\n\nWhen you write a helper, think about its pre-condition (what must be true before it is called - for example, the robot is standing on a corner) and its post-condition (what is true afterwards - the robot is on the next corner, facing along the next side). If every helper keeps its promise, the loop in `main()` works.",
+  "vocabulary": [
+    {
+      "term": "pre-condition",
+      "gloss": "what must be true before a function is called, for example “the robot is facing east”."
+    },
+    {
+      "term": "post-condition",
+      "gloss": "what is true after the function has finished, for example “the robot is on the next corner, facing east”."
+    },
+    {
+      "term": "helper function",
+      "gloss": "a small function that does one step of the job, called from `main()` or from another function."
+    },
+    {
+      "term": "decomposition",
+      "gloss": "breaking a large problem into smaller, more manageable sub-problems - in code, into several short functions."
+    },
+    {
+      "term": "for loop",
+      "gloss": "a loop that repeats a block of code a specific number of times: `for i in range(4):`"
+    }
+  ],
+  "starterCode": "from warehouse.robot import *\n\n# File: five_per_corner.py\n# ------------------------\n# Place five parcels in each corner of the storage area.\n\n\n# Pre-condition:  robot is on a corner, facing along the next side\n# Post-condition: five parcels are on this corner\ndef put_five_parcels():\n    pass\n\n\n# Pre-condition:  robot is on a corner\n# Post-condition: robot is on the next corner, facing along the next side\ndef move_to_next_corner():\n    pass\n\n\ndef main():\n    for i in range(4):\n        put_five_parcels()\n        move_to_next_corner()\n\n\nif __name__ == '__main__':\n    main()\n",
+  "map": {
+    "cols": 4,
+    "rows": 4,
+    "robot": { "x": 1, "y": 1, "dir": "E" },
+    "items": {}
+  },
+  "goal": {
+    "items": { "1,1": 5, "4,1": 5, "4,4": 5, "1,4": 5 },
+    "robot": { "x": 1, "y": 1, "dir": "E" }
+  },
+  "requires": [
+    {
+      "pattern": "def\\s+put_five_parcels",
+      "message": "Keep the helper function put_five_parcels()."
+    },
+    {
+      "pattern": "def\\s+move_to_next_corner",
+      "message": "Keep the helper function move_to_next_corner()."
+    }
+  ],
+  "hints": [
+    "`put_five_parcels()` is a for loop with `range(5)` and one `put_parcel()` inside.",
+    "A function that calls another function, which contains a loop, which is called from a loop - this is decomposition in action."
+  ],
+  "reflect": "Write the pre-condition and post-condition of move_to_next_corner() in your own words. Why do these help when you use the function inside a loop?",
+  "solution": "from warehouse.robot import *\n\n# File: five_per_corner.py\n# ------------------------\n# Place five parcels in each corner of the storage area.\n\n\n# Pre-condition:  robot is on a corner, facing along the next side\n# Post-condition: five parcels are on this corner\ndef put_five_parcels():\n    for i in range(5):\n        put_parcel()\n\n\n# Pre-condition:  robot is on a corner\n# Post-condition: robot is on the next corner, facing along the next side\ndef move_to_next_corner():\n    move()\n    move()\n    move()\n    turn_left()\n\n\ndef main():\n    for i in range(4):\n        put_five_parcels()\n        move_to_next_corner()\n\n\nif __name__ == '__main__':\n    main()\n"
+}

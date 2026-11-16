@@ -1,0 +1,54 @@
+{
+  "id": "wh-4",
+  "week": 2,
+  "type": "robot",
+  "world": "warehouse",
+  "title": "Fix the fence post",
+  "concepts": ["The while loop and off-by-one errors"],
+  "brief": "A colleague has written a program to lay a parcel on every square of an aisle, using a while loop. A while loop is an indefinite loop: it does not count; it keeps repeating its body as long as a condition stays true. Here the condition is `front_is_clear()`, which is true while there is no wall directly in front of the robot.\n\nRun the program and compare the result with the goal. One square is missed. This is a classic fence post problem, also called an off-by-one error: imagine building a fence - you need one more post than the number of rails between them. In the loop, every iteration does one put and one move, but the last square needs a put without a move.\n\nFix the bug without changing the loop into a for loop. Think about what happens after the loop finishes.",
+  "vocabulary": [
+    {
+      "term": "while loop",
+      "gloss": "a loop that keeps repeating as long as a condition is true: `while front_is_clear():`"
+    },
+    {
+      "term": "indefinite loop",
+      "gloss": "a loop where you do not know how many times it will run - it stops when a condition changes (a while loop)."
+    },
+    {
+      "term": "condition",
+      "gloss": "a test that is either `True` or `False`, for example `front_is_clear()`."
+    },
+    {
+      "term": "fence post problem",
+      "gloss": "also called an off-by-one error: a loop that repeats one time too many or one time too few, like counting fence posts and fence rails."
+    },
+    {
+      "term": "bug",
+      "gloss": "a mistake in a program that makes it behave in an unexpected way."
+    }
+  ],
+  "starterCode": "from warehouse.robot import *\n\n# File: parcel_line_bug.py\n# ------------------------\n# Lay a parcel on every square of the aisle.\n# Something is wrong. Run it and find the bug.\n\n\ndef main():\n    while front_is_clear():\n        put_parcel()\n        move()\n\n\nif __name__ == '__main__':\n    main()\n",
+  "map": {
+    "cols": 6,
+    "rows": 1,
+    "robot": { "x": 1, "y": 1, "dir": "E" },
+    "items": {}
+  },
+  "goal": {
+    "items": { "1,1": 1, "2,1": 1, "3,1": 1, "4,1": 1, "5,1": 1, "6,1": 1 },
+    "robot": { "x": 6, "y": 1 }
+  },
+  "requires": [
+    {
+      "pattern": "\\bwhile\\b",
+      "message": "Keep the while loop - fix the bug instead of replacing the loop."
+    }
+  ],
+  "hints": [
+    "The loop stops as soon as the robot is against the wall - before it puts down the last parcel.",
+    "Add one more `put_parcel()` after the loop, at the same indentation as the `while` line."
+  ],
+  "reflect": "Explain the fence post problem to a friend who has never programmed. Why did the while loop leave one square empty?",
+  "solution": "from warehouse.robot import *\n\n# File: parcel_line_bug.py\n# ------------------------\n# Lay a parcel on every square of the aisle.\n# Something is wrong. Run it and find the bug.\n\n\ndef main():\n    while front_is_clear():\n        put_parcel()\n        move()\n    put_parcel()\n\n\nif __name__ == '__main__':\n    main()\n"
+}
