@@ -25,8 +25,38 @@ const Compare = (function () {
     }
   }
 
-  // Only these two names can be seen from outside this file.
-  return { compare: compare, normalise: normalise };
+  // The lines of an output under the hub's rule. No output at all is no
+  // lines, not one empty line.
+  function linesOf(text) {
+    const clean = normalise(text);
+    return clean === "" ? [] : clean.split("\n");
+  }
+
+  // The first difference between the output a test expects and the output
+  // a program gave, as a sentence for the student. "" when the hub's rule
+  // finds no difference.
+  function diffHint(expected, actual) {
+    const want = linesOf(expected);
+    const got = linesOf(actual);
+    const longest = Math.max(want.length, got.length);
+    for (let i = 0; i < longest; i++) {
+      if (got[i] === want[i]) { continue; }   // the same: look at the next line
+      const n = i + 1;                        // people count lines from 1
+      if (got[i] === undefined) { return `Line ${n} is missing from your output.`; }
+      if (want[i] === undefined) { return `Your program printed an extra line ${n}.`; }
+      if (got[i].toLowerCase() === want[i].toLowerCase()) {
+        return `Line ${n} differs only in capital letters - Python compares text exactly.`;
+      }
+      if (got[i].replace(/\s/g, "") === want[i].replace(/\s/g, "")) {
+        return `Line ${n} differs only in spaces. Check the spaces inside your strings, and remember that commas in print() add a space.`;
+      }
+      return `The first difference is on line ${n}. Compare the two versions character by character.`;
+    }
+    return "";
+  }
+
+  // Only these three names can be seen from outside this file.
+  return { compare: compare, normalise: normalise, diffHint: diffHint };
 })();
 
 // In the browser there is no "module", so this line does nothing.
