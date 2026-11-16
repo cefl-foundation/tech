@@ -1,0 +1,98 @@
+
+.py-editor { border: 3px solid var(--black); }
+
+/* The black bar: the file's name on the left, Reset on the right. */
+.py-editor-bar {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 10px;
+  background: var(--black);
+  color: var(--white);
+}
+
+.py-editor-name {
+  font-family: var(--mono);
+  font-size: 14px;
+}
+
+.py-editor-tools {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+}
+
+.py-editor-tools button {
+  padding: 3px 8px;
+  border: 1px solid var(--line);
+  background: var(--black);
+  color: var(--white);
+  font-size: 13px;
+}
+
+.py-editor-tools button:hover {
+  background: var(--white);
+  color: var(--black);
+}
+
+/* Two columns: the line numbers (44px), then the code. The numbers make
+   the row as tall as the program, and the code box stretches to that
+   height, so the page scrolls and the code does not. */
+.py-editor-body {
+  display: grid;
+  grid-template-columns: 44px 1fr;
+  background: var(--white);
+}
+
+.py-editor-gutter {
+  overflow: hidden;
+  padding: 12px 0;
+  border-right: 1px solid var(--line);
+  color: var(--grey);
+  font-family: var(--mono);
+  font-size: 14px;
+  line-height: 21px;
+  text-align: right;
+  user-select: none;
+}
+
+/* One number on each line. */
+.py-editor-gutter span {
+  display: block;
+  padding-right: 6px;
+}
+
+.py-editor-code {
+  display: block;
+  width: 100%;
+  min-height: 380px;
+  margin: 0;
+  padding: 12px;
+  border: 0;
+  background: transparent;
+  color: var(--ink);
+  font-family: var(--mono);
+  font-size: 14px;
+  line-height: 21px;
+  tab-size: 4;
+  white-space: pre;   /* a long line does not wrap: the box scrolls sideways */
+  overflow: auto;
+  resize: none;
+  align-self: stretch;   /* as tall as the column of numbers beside it */
+}
+
+/* The ring goes inside the box, where nothing can hide it. */
+.py-editor-code:focus-visible {
+  outline: none;
+  box-shadow: inset 0 0 0 3px var(--red);
+}
+
+.py-note {
+  margin: 8px 0 0;
+  color: var(--grey);
+  font-size: 14px;
+}
