@@ -1,0 +1,154 @@
+
+
+/* ---------- the cards on the list page ---------- */
+/* A terminal is black, so the cards of the console programs are black. */
+.fcard.console .fcard-front { background: var(--black); }
+
+/* ---------- Run and Run the tests ---------- */
+.py-runrow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+/* ---------- keyboard input ---------- */
+.py-inputs { margin-top: 14px; }
+
+.py-inputs label {
+  display: block;
+  margin-bottom: 4px;
+  font-size: 14px;
+}
+
+.py-inputs textarea {
+  display: block;
+  width: 100%;
+  padding: 8px;
+  border: 2px solid var(--black);
+  font-family: var(--mono);
+  font-size: 14px;
+  line-height: 21px;
+  resize: vertical;
+}
+
+.py-inputs textarea:focus-visible,
+.py-terminal-screen:focus-visible {
+  outline: none;
+  box-shadow: inset 0 0 0 3px var(--red);
+}
+
+/* ---------- the terminal ---------- */
+.py-terminal {
+  margin-top: 14px;
+  border: 3px solid var(--black);
+  background: var(--black);
+  color: var(--white);
+}
+
+.py-terminal-bar {
+  padding: 8px 14px 0;
+  color: var(--line);
+  font-family: var(--display);
+  font-size: 18px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.py-terminal-screen {
+  min-height: 96px;
+  max-height: 420px;
+  margin: 0;
+  padding: 6px 14px 12px;
+  overflow: auto;
+  font-family: var(--mono);
+  font-size: 14px;
+  line-height: 21px;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+/* What the user typed. */
+.py-terminal-screen .typed { color: var(--yellow); }
+
+/* The error that stopped the program: white words with a red bar at
+   their left. Red words on black would be too dark to read. */
+.py-terminal-screen .error {
+  display: block;
+  margin-top: 6px;
+  padding-left: 10px;
+  border-left: 6px solid var(--red);
+}
+
+/* Words from the site, not from the program. */
+.py-terminal-screen .note {
+  display: block;
+  color: var(--line);
+}
+
+/* ---------- the results of the tests ---------- */
+.py-report { margin-top: 14px; }
+
+.py-report h3 {
+  margin-bottom: 8px;
+  font-size: 26px;
+}
+
+/* One box for each test. Its left edge is green or red, and a label says
+   Passed or Not yet: colour is never the only sign. */
+.py-test {
+  margin-bottom: 8px;
+  padding: 10px 14px;
+  border: 2px solid var(--black);
+  border-left: 8px solid var(--green);
+}
+
+.py-test.failed {
+  border-left-color: var(--red);
+  background: var(--paper);
+}
+
+.py-test p { margin: 0 0 6px; }
+.py-test p:last-child { margin-bottom: 0; }
+
+.py-test-tag {
+  display: inline-block;
+  padding: 1px 8px;
+  background: var(--green);
+  color: var(--white);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.py-test.failed .py-test-tag { background: var(--red); }
+
+.py-test-label {
+  font-size: 14px;
+  font-weight: 700;
+}
+
+/* A long line wraps, as it does in the terminal, so the box can never
+   be wider than the screen. */
+.py-test pre {
+  margin: 0 0 8px;
+  padding: 8px;
+  border: 1px solid var(--line);
+  background: var(--white);
+  font-family: var(--mono);
+  font-size: 13px;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.py-test-hint {
+  padding-left: 10px;
+  border-left: 4px solid var(--black);
+}
+
+.py-missing {
+  margin: 0;
+  padding-left: 20px;
+}

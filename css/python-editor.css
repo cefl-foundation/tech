@@ -66,6 +66,12 @@
   padding-right: 6px;
 }
 
+/* The line an error is on: white on red, and the number is still there. */
+.py-editor-gutter .error {
+  background: var(--red);
+  color: var(--white);
+}
+
 .py-editor-code {
   display: block;
   width: 100%;
