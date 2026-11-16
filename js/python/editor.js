@@ -57,10 +57,102 @@ const Editor = (function () {
       gutter.scrollTop = code.scrollTop;
     });
 
+        // ---------- the locked lines ----------
+
+    const lock = EditorLock.lockRegions(options.starter);
+    // Saved code that has lost a locked line gets it back.
+    code.value = EditorLock.repair(lock, code.value);
+    if (lock.head || lock.tail) {
+      code.setAttribute("aria-label", "Your code (the first and last lines are locked)");
+    }
+
+    // A grey band behind the locked lines at the top, and one behind those
+    // at the bottom. The bands lie under the numbers and the code.
+    const headBand = make("div", "py-editor-band");
+    const tailBand = make("div", "py-editor-band");
+    body.append(headBand, tailBand);
+
+    // Put the bands where the locked lines are now: the code may have been
+    // scrolled, and the student's part may have grown or shrunk.
+    function placeBands() {
+      const style = window.getComputedStyle(code);
+      const lineHeight = parseFloat(style.lineHeight);
+      const padding = parseFloat(style.paddingTop);
+      const free = code.value.length - lock.tail.length;                  // where the tail begins
+      const linesAbove = code.value.slice(0, free).split("\n").length;    // lines above the tail
+      headBand.hidden = !lock.head;
+      headBand.style.top = `${-code.scrollTop}px`;
+      headBand.style.height = `${padding + lock.headLines * lineHeight}px`;
+      tailBand.hidden = !lock.tail;
+      tailBand.style.top = `${padding + linesAbove * lineHeight - code.scrollTop}px`;
+    }
+
+    // Say why nothing happened. The words are for screen readers too.
+    const lockNote = make("span", "py-editor-locknote");
+    lockNote.setAttribute("role", "status");
+    tools.prepend(lockNote);
+    let noteTimer = null;
+
+    function refuse() {
+      Dom.text(lockNote, "Grey lines are locked - write inside main()");
+      node.classList.add("refused");
+      clearTimeout(noteTimer);
+      noteTimer = setTimeout(function () {
+        Dom.text(lockNote, "");
+        node.classList.remove("refused");
+      }, 3000);
+    }
+
+    // Would a change at the cursor, or to the selected text, touch a locked line?
+    function locked(kind) {
+      return EditorLock.isLocked(lock, code.value, code.selectionStart, code.selectionEnd, kind);
+    }
+
+    // The browser says what it is about to do, before it does it:
+    // "insertText", "deleteContentBackward", "insertFromPaste" and so on.
+    // preventDefault() stops it.
+    code.addEventListener("beforeinput", function (event) {
+      const type = event.inputType || "";
+      // Undo, redo and dragging do not change the text at the cursor, so
+      // the cursor says nothing about them. The safety net below judges them.
+      if (/^(history|insertFromDrop|deleteByDrag)/.test(type)) { return; }
+      let kind = "insert";
+      if (/^delete.*Backward$/.test(type)) { kind = "back"; }
+      if (/^delete.*Forward$/.test(type)) { kind = "forward"; }
+      if (locked(kind)) {
+        event.preventDefault();
+        refuse();
+      }
+    });
+
+    // The safety net. Whatever got past the listener above (undo, text
+    // dragged with the mouse), a change that damaged a locked line is
+    // taken back.
+    let lastWhole = code.value;
+    code.addEventListener("input", function () {
+      if (!EditorLock.isWhole(lock, code.value)) {
+        const cursor = code.selectionStart;
+        code.value = lastWhole;
+        const firstFree = lock.head.length;
+        const lastFree = lastWhole.length - lock.tail.length;
+        code.selectionStart = code.selectionEnd = Math.max(firstFree, Math.min(cursor, lastFree));
+        refuse();
+      }
+      lastWhole = code.value;
+    });
+
+    code.addEventListener("scroll", placeBands);
+    code.addEventListener("input", placeBands);
+    // The bands can be placed only when the box is on the page and has a
+    // size. A ResizeObserver calls placeBands() when that happens, and
+    // again whenever the size changes.
+    new ResizeObserver(placeBands).observe(code);
+
     // ---------- what the keys do ----------
 
     // Put text in at the cursor, in place of anything selected.
     function insert(text) {
+      if (locked("insert")) { refuse(); return; }
       code.setRangeText(text, code.selectionStart, code.selectionEnd, "end");
       code.dispatchEvent(new Event("input"));   // tell the listeners that the code changed
     }

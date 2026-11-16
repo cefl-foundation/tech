@@ -96,3 +96,32 @@
   color: var(--grey);
   font-size: 14px;
 }
+
+/* ---------- the locked lines ---------- */
+/* Two grey bands lie behind the locked lines. They are under the numbers
+   and the code, which have no background of their own. */
+.py-editor-body {
+  position: relative;
+  overflow: hidden;   /* the bottom band is far too tall: this cuts it off */
+}
+
+.py-editor-gutter, .py-editor-code {
+  position: relative;
+  z-index: 1;
+}
+
+.py-editor-band {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 100000px;
+  border-left: 4px solid var(--grey);
+  background-color: var(--paper);
+  background-image: repeating-linear-gradient(135deg, transparent 0 9px, rgba(0, 0, 0, 0.05) 9px 10px);
+}
+
+/* A change to a locked line was refused: the bands' edge turns red for a
+   moment, and white words in the black bar say why. */
+.py-editor.refused .py-editor-band { border-left-color: var(--red); }
+
+.py-editor-locknote { font-weight: 700; }
