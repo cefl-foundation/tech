@@ -69,23 +69,29 @@ const TaskPage = (function () {
     return `<p class="watch-note"><b>Have you met the robots yet?</b> If not, watch them first: ${links.join(" and ")}. Both are on <a href="${Dom.esc(settings.page)}#watch-first">the task list</a> too.</p>`;
   }
 
-  // The brief: paragraphs split at blank lines. A paragraph inside ``` marks
-    // is sample code, shown as it is. Inside a sentence, text between two
-  // ` marks is code too. Words from the word bank are in bold.
+    // The brief. Words from the word bank are in bold.
   function briefHtml(task) {
     const terms = (task.vocabulary || []).map((word) => word.term);
+    return textHtml(task.brief, (safe) => boldTerms(safe, terms));
+  }
+
+  // A brief or a hint as HTML: paragraphs split at blank lines. A paragraph
+  // inside ``` marks is sample code, shown as it is. Inside a sentence,
+  // text between two ` marks is code too. between is handed on to
+  // Dom.code(): the brief uses it to put the word-bank terms in bold.
+  function textHtml(text, between) {
     let html = "";
-    for (const paragraph of String(task.brief || "").split(/\n\n+/)) {
+    for (const paragraph of String(text || "").split(/\n\n+/)) {
       const code = /^```\n?([\s\S]*?)\n?```$/.exec(paragraph.trim());
       if (code) {
         html += `<pre class="sample">${Dom.esc(code[1])}</pre>`;
       } else {
-        html += `<p>${Dom.code(paragraph, (safe) => boldTerms(safe, terms))}</p>`;
+        html += `<p>${Dom.code(paragraph, between)}</p>`;
       }
     }
     return html;
   }
-
+  
   // Put <b> round each word-bank term in a paragraph that is already escaped.
   function boldTerms(html, terms) {
     for (const term of terms) {
@@ -120,7 +126,7 @@ const TaskPage = (function () {
     hints.forEach(function (hint, i) {
       html += `
         <button type="button" class="hint-button" data-hint="${i}"${i > 0 ? " hidden" : ""}>Show hint ${i + 1}</button>
-        <p class="hint" id="hint-${i}" hidden>${Dom.code(hint)}</p>`;
+        <div class="hint" id="hint-${i}" hidden>${textHtml(hint)}</div>`;
     });
     return html + `</div>`;
   }
