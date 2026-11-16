@@ -32,6 +32,24 @@ const Dom = (function () {
     });
   }
 
-    // Only these four names can be seen from outside this file.
-  return { make: make, clear: clear, text: text, esc: esc };
+  // Make text safe, as esc() does, and show the text between two ` marks
+  // as code: code("Use `print()` here") gives "Use <code>print()</code> here".
+  // `between` can be left out. If it is given, it is a function, and the
+  // safe text outside the code goes through it on the way: the task page
+  // uses it to put the words of the word bank in bold.
+  function code(value, between) {
+    const parts = String(value == null ? "" : value).split("`");
+    let html = "";
+    parts.forEach(function (part, i) {
+      if (i % 2 === 1) {
+        html += "<code>" + esc(part) + "</code>";   // every second part was between two ` marks
+      } else {
+        html += between ? between(esc(part)) : esc(part);
+      }
+    });
+    return html;
+  }
+
+  // Only these five names can be seen from outside this file.
+  return { make: make, clear: clear, text: text, esc: esc, code: code };
 })();
