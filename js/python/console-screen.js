@@ -32,6 +32,8 @@
       onChange: function (code) { Progress.saveCode(task.id, task, code); }
     });
 
+    
+
     // ---------- the parts ----------
 
     const runButton = make("button", "button primary", "Run");
@@ -213,6 +215,7 @@
         event.preventDefault();
         runTests();
       }
+      QuickPractice.add(task, area);
     });
   }
 

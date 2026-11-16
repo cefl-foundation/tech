@@ -10,6 +10,7 @@ tasks/
   index.json    the list of tasks, grouped by week (order matters)
   console/      type "console": Python programs that print text, week 3
   web/          types "html-editor", "inspect" and "walkthrough", weeks 6 and 7
+  quiz.json     the questions of the quick vocabulary practice
 ```
 
 The robot and AI tasks get folders of their own when they move in.
@@ -46,6 +47,31 @@ files, while a Mac finds either. `title` is repeated here so the task list
 can be drawn without fetching every task file; it must be the same as the
 title in the task's own file. `concept` is one short line shown under the
 title in the task list.
+
+## quiz.json
+
+The quick vocabulary practice: two questions under every Python task.
+They are not saved and do not count towards the task.
+
+```json
+{
+  "console": [
+    { "type": "mc", "q": "What is the type of the result of `7 / 2`?", "options": ["int", "float", "string", "boolean"], "answer": 1, "why": "…" },
+    { "type": "gap", "q": "One repetition of a loop is called one ______.", "accept": ["iteration"], "why": "…" }
+  ]
+}
+```
+
+There is one group of questions for the console tasks (`console`) and one
+for each robot world (`mars`, `warehouse`, `ocean`). A task shows two
+questions from its group, chosen by the number at the end of its id: task
+1 gets the first and second, task 2 the third and fourth, and so on,
+starting at the top again after the last.
+
+In an `mc` question, `answer` is the number of the right option, counted
+from 0. In a `gap` question, `accept` lists every answer that counts as
+right, in small letters. `why` is shown after the student checks an
+answer. `tests/quiz.test.js` checks every question.
 
 ## Fields every web task has
 

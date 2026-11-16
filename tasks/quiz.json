@@ -1,0 +1,276 @@
+{
+  "mars": [
+    {
+      "type": "mc",
+      "q": "In the command `move()`, what are the round brackets called?",
+      "options": [
+        "a colon",
+        "a parenthesis",
+        "an indentation",
+        "a code block"
+      ],
+      "answer": 1,
+      "why": "The round brackets are a pair of parentheses. Every function call needs them, even when nothing goes inside."
+    },
+    {
+      "type": "gap",
+      "q": "When you write `def turn_right():` you ______ a function. (one word)",
+      "accept": [
+        "define",
+        "defined",
+        "defining"
+      ],
+      "why": "`def` defines the function: it gives a name to a set of actions. Writing `turn_right()` later on calls it."
+    },
+    {
+      "type": "mc",
+      "q": "Your program calls `turn_around()` but the function was never defined. Which error does Python show?",
+      "options": [
+        "SyntaxError",
+        "IndentationError",
+        "NameError",
+        "TypeError"
+      ],
+      "answer": 2,
+      "why": "An undefined function gives NameError: name 'turn_around' is not defined. Python does not know what that name means."
+    },
+    {
+      "type": "gap",
+      "q": "Breaking a large problem into smaller, more manageable sub-problems is called ______.",
+      "accept": [
+        "decomposition",
+        "decomposing"
+      ],
+      "why": "Decomposition: each small problem becomes one short helper function, and `main()` calls them in order."
+    },
+    {
+      "type": "mc",
+      "q": "Which of these is the function where the program starts?",
+      "options": [
+        "the helper function",
+        "the main function",
+        "the import package",
+        "the source code"
+      ],
+      "answer": 1,
+      "why": "The main function is the starting point. The last two lines of every file call it."
+    },
+    {
+      "type": "mc",
+      "q": "Which line correctly begins a function definition?",
+      "options": [
+        "`def turn_right()`",
+        "`def turn_right():`",
+        "`define turn_right():`",
+        "`def turn_right;`"
+      ],
+      "answer": 1,
+      "why": "The keyword is `def`, the name is followed by parentheses, and the line ends with a colon before the indented body."
+    }
+  ],
+  "warehouse": [
+    {
+      "type": "mc",
+      "q": "A loop that repeats a block of code a specific number of times is called a ...",
+      "options": [
+        "definite loop",
+        "indefinite loop",
+        "condition",
+        "helper function"
+      ],
+      "answer": 0,
+      "why": "A for loop with `range(4)` is a definite loop: you know in advance it runs four times."
+    },
+    {
+      "type": "gap",
+      "q": "Complete the line: `for i in ______(5):`",
+      "accept": [
+        "range"
+      ],
+      "why": "`range(5)` produces the numbers 0, 1, 2, 3, 4 - five iterations."
+    },
+    {
+      "type": "mc",
+      "q": "The indented lines inside a loop, which run every time the loop repeats, are called ...",
+      "options": [
+        "the condition",
+        "the body of the loop",
+        "the post-condition",
+        "the fence post"
+      ],
+      "answer": 1,
+      "why": "The body of the loop is everything indented under the `for` or `while` line."
+    },
+    {
+      "type": "gap",
+      "q": "One repetition of a loop is called one ______.",
+      "accept": [
+        "iteration"
+      ],
+      "why": "To iterate is to repeat; each repetition is an iteration."
+    },
+    {
+      "type": "mc",
+      "q": "What is a pre-condition?",
+      "options": [
+        "what a function prints",
+        "what must be true before a function is called",
+        "what is true after a function has finished",
+        "the number of iterations"
+      ],
+      "answer": 1,
+      "why": "The pre-condition is the starting situation the function expects, e.g. \"the robot is on a corner, facing east\". The post-condition describes the situation afterwards."
+    },
+    {
+      "type": "mc",
+      "q": "A loop runs one time too few, so the last square is missed. This mistake is known as ...",
+      "options": [
+        "a syntax error",
+        "an infinite loop",
+        "an off-by-one error (fence post problem)",
+        "a type error"
+      ],
+      "answer": 2,
+      "why": "Fence post problem: a fence with 5 rails needs 6 posts. Loops that pair a put with a move often miss the last post."
+    }
+  ],
+  "ocean": [
+    {
+      "type": "mc",
+      "q": "A while loop is ...",
+      "options": [
+        "a definite loop - it always runs a fixed number of times",
+        "an indefinite loop - it runs as long as a condition is true",
+        "a function",
+        "a variable"
+      ],
+      "answer": 1,
+      "why": "A while loop does not count. It checks its condition before every iteration and stops when the condition becomes false."
+    },
+    {
+      "type": "gap",
+      "q": "A test that is either True or False, such as `front_is_clear()`, is called a ______.",
+      "accept": [
+        "condition",
+        "boolean",
+        "bool",
+        "boolean expression"
+      ],
+      "why": "A condition. Its value is a boolean: `True` or `False`."
+    },
+    {
+      "type": "mc",
+      "q": "In `if front_is_clear():` ... `else:` ..., when does the `else` block run?",
+      "options": [
+        "always",
+        "when the condition is True",
+        "when the condition is False",
+        "never"
+      ],
+      "answer": 2,
+      "why": "The if-else statement has two paths: the `if` block runs when the condition is true, the `else` block when it is false."
+    },
+    {
+      "type": "mc",
+      "q": "What kind of value does `bottle_present()` give back?",
+      "options": [
+        "an integer",
+        "a string",
+        "a boolean",
+        "a float"
+      ],
+      "answer": 2,
+      "why": "Sensors return a boolean (`True` or `False`), which is why they can be used directly as a condition."
+    },
+    {
+      "type": "gap",
+      "q": "A mistake in a program that makes it behave unexpectedly is called a ______.",
+      "accept": [
+        "bug"
+      ],
+      "why": "A bug. Finding and fixing bugs is called debugging."
+    },
+    {
+      "type": "mc",
+      "q": "An `if` inside the body of a `while` loop means the program has ...",
+      "options": [
+        "one level of indentation",
+        "two levels of indentation",
+        "no indentation",
+        "a fence post problem"
+      ],
+      "answer": 1,
+      "why": "Each block is indented one level deeper than the line that opens it, so the code inside the `if` is two levels in."
+    }
+  ],
+  "console": [
+    {
+      "type": "mc",
+      "q": "The user types `9` when asked by `input()`. What type of value does the program receive?",
+      "options": [
+        "an int",
+        "a float",
+        "a string",
+        "a boolean"
+      ],
+      "answer": 2,
+      "why": "`input()` always gives back a string, even when the user types digits. Use `int()` to convert it."
+    },
+    {
+      "type": "gap",
+      "q": "`int(\"9\")` ______ the string into a whole number. (one verb)",
+      "accept": [
+        "converts",
+        "convert",
+        "changes",
+        "turns",
+        "transforms"
+      ],
+      "why": "It converts (changes) the value from one type to another. `str()` converts the other way."
+    },
+    {
+      "type": "mc",
+      "q": "Joining strings together with `+`, as in `\"hi\" + \" there\"`, is called ...",
+      "options": [
+        "assignment",
+        "concatenation",
+        "conversion",
+        "iteration"
+      ],
+      "answer": 1,
+      "why": "Concatenation. The `+` operator adds numbers but concatenates strings."
+    },
+    {
+      "type": "mc",
+      "q": "What is the type of the result of `7 / 2`?",
+      "options": [
+        "int",
+        "float",
+        "string",
+        "boolean"
+      ],
+      "answer": 1,
+      "why": "Division with `/` always gives a float (`3.5`). Whole-number division uses `//`."
+    },
+    {
+      "type": "gap",
+      "q": "The naming style `num_students`, lowercase words joined by underscores, is called ______ case.",
+      "accept": [
+        "snake"
+      ],
+      "why": "Snake case is the Python convention for variable and function names."
+    },
+    {
+      "type": "mc",
+      "q": "What does the line `total = total + 1` do?",
+      "options": [
+        "checks whether total equals total + 1",
+        "creates an error",
+        "works out total + 1, then stores the result back in total",
+        "prints total"
+      ],
+      "answer": 2,
+      "why": "Assignment: Python first evaluates the right-hand side, then stores the result in the variable on the left. It is not the same as \"equals\" in maths."
+    }
+  ]
+}
