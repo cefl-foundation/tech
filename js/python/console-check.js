@@ -38,12 +38,14 @@ const ConsoleCheck = (function () {
 
   // The messages of the task's requires that this code does not meet.
   // A pattern is kept as text in the task file, because JSON cannot hold
-  // a pattern: new RegExp() turns the text into one.
+  // a pattern: new RegExp() turns the text into one. A word in a comment
+  // does not count, so the comments are taken out first.
   function missing(task, code) {
+    const text = code.replace(/#.*$/gm, "");
     const messages = [];
     for (const rule of task.requires || []) {
       let met = false;
-      try { met = new RegExp(rule.pattern).test(code); }
+      try { met = new RegExp(rule.pattern).test(text); }
       catch (error) { met = false; }   // a broken pattern counts as not met; it does not crash the page
       if (!met) { messages.push(rule.message); }
     }
