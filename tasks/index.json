@@ -27,6 +27,38 @@
           "file": "robot/mars-3.json",
           "title": "Around the crater",
           "concept": "Decomposition"
+        },
+        {
+          "id": "wh-1",
+          "type": "robot",
+          "world": "warehouse",
+          "file": "robot/wh-1.json",
+          "title": "Fill the shelf",
+          "concept": "The for loop"
+        },
+        {
+          "id": "wh-2",
+          "type": "robot",
+          "world": "warehouse",
+          "file": "robot/wh-2.json",
+          "title": "Four corners",
+          "concept": "Repeating a pattern"
+        },
+        {
+          "id": "wh-3",
+          "type": "robot",
+          "world": "warehouse",
+          "file": "robot/wh-3.json",
+          "title": "Five per corner",
+          "concept": "Helper functions with loops"
+        },
+        {
+          "id": "wh-4",
+          "type": "robot",
+          "world": "warehouse",
+          "file": "robot/wh-4.json",
+          "title": "Fix the fence post",
+          "concept": "The while loop and off-by-one errors"
         }
       ]
     },

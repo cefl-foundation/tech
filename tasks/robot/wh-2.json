@@ -1,0 +1,50 @@
+{
+  "id": "wh-2",
+  "week": 2,
+  "type": "robot",
+  "world": "warehouse",
+  "title": "Four corners",
+  "concepts": ["Repeating a pattern"],
+  "brief": "The robot is in the bottom-left corner of a square storage area, four squares by four, facing east. A parcel is needed in each of the four corners, and afterwards the robot should be back where it started, facing east again.\n\nNotice that the same pattern repeats four times: put down a parcel, drive along one side of the square, and turn left at the corner. That is exactly the shape of a for loop with four iterations.\n\nBefore you write any code, work out how many `move()` calls it takes to get from one corner to the next. Getting this number wrong by one is the most common bug in this task.",
+  "vocabulary": [
+    {
+      "term": "for loop",
+      "gloss": "a loop that repeats a block of code a specific number of times: `for i in range(4):`"
+    },
+    {
+      "term": "iterate",
+      "gloss": "to repeat a process. One repetition is called an iteration."
+    },
+    {
+      "term": "bug",
+      "gloss": "a mistake in a program that makes it behave in an unexpected way."
+    },
+    {
+      "term": "fence post problem",
+      "gloss": "also called an off-by-one error: a loop that repeats one time too many or one time too few, like counting fence posts and fence rails."
+    }
+  ],
+  "starterCode": "from warehouse.robot import *\n\n# File: four_corners.py\n# ---------------------\n# Place one parcel in each corner of the storage area.\n\n\ndef main():\n    pass\n\n\nif __name__ == '__main__':\n    main()\n",
+  "map": {
+    "cols": 4,
+    "rows": 4,
+    "robot": { "x": 1, "y": 1, "dir": "E" },
+    "items": {}
+  },
+  "goal": {
+    "items": { "1,1": 1, "4,1": 1, "4,4": 1, "1,4": 1 },
+    "robot": { "x": 1, "y": 1, "dir": "E" }
+  },
+  "requires": [
+    {
+      "pattern": "\\bfor\\b",
+      "message": "Use a for loop: the same steps repeat four times."
+    }
+  ],
+  "hints": [
+    "From one corner to the next is three moves, not four.",
+    "```\nfor i in range(4):\n    put_parcel()\n    move()\n    move()\n    move()\n    turn_left()\n```"
+  ],
+  "reflect": "How many moves did you need between corners, and why is it not four? Use the term “off-by-one error” in your answer.",
+  "solution": "from warehouse.robot import *\n\n# File: four_corners.py\n# ---------------------\n# Place one parcel in each corner of the storage area.\n\n\ndef main():\n    for i in range(4):\n        put_parcel()\n        move()\n        move()\n        move()\n        turn_left()\n\n\nif __name__ == '__main__':\n    main()\n"
+}

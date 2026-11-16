@@ -1,0 +1,54 @@
+{
+  "id": "wh-1",
+  "week": 2,
+  "type": "robot",
+  "world": "warehouse",
+  "title": "Fill the shelf",
+  "concepts": ["The for loop"],
+  "brief": "The robot is at the start of an aisle, facing east. The packers need a parcel on each of the first four squares of the aisle. You could write `put_parcel()` and `move()` four times each, but programmers avoid repeating themselves.\n\nUse a for loop. The line `for i in range(4):` tells Python to iterate - to repeat the indented lines below it, called the body of the loop, exactly four times. A loop like this, where you know in advance how many repetitions you need, is called a definite loop.\n\nInside the body, put a parcel down and then move one square forward. Look carefully at the goal picture to see where the robot should finish.",
+  "vocabulary": [
+    {
+      "term": "for loop",
+      "gloss": "a loop that repeats a block of code a specific number of times: `for i in range(4):`"
+    },
+    {
+      "term": "body of the loop",
+      "gloss": "the indented lines inside the loop - the code that runs every time the loop repeats."
+    },
+    {
+      "term": "iterate",
+      "gloss": "to repeat a process. One repetition is called an iteration."
+    },
+    {
+      "term": "definite loop",
+      "gloss": "a loop where you know in advance how many times it will run (a for loop)."
+    },
+    {
+      "term": "indentation",
+      "gloss": "the spaces at the beginning of a line of code. In Python, indentation shows which lines belong inside a function, a loop or an if-statement."
+    }
+  ],
+  "starterCode": "from warehouse.robot import *\n\n# File: fill_shelf.py\n# -------------------\n# Put a parcel on each of the first four squares of the aisle.\n\n\ndef main():\n    pass  # replace this line with a for loop\n\n\nif __name__ == '__main__':\n    main()\n",
+  "map": {
+    "cols": 6,
+    "rows": 2,
+    "robot": { "x": 1, "y": 1, "dir": "E" },
+    "items": {}
+  },
+  "goal": {
+    "items": { "1,1": 1, "2,1": 1, "3,1": 1, "4,1": 1 },
+    "robot": { "x": 5, "y": 1 }
+  },
+  "requires": [
+    {
+      "pattern": "\\bfor\\b",
+      "message": "This task asks you to use a for loop rather than repeating the commands by hand."
+    }
+  ],
+  "hints": [
+    "```\nfor i in range(4):\n    put_parcel()\n    move()\n```",
+    "Both lines of the body must be indented under the `for` line."
+  ],
+  "reflect": "What is a for loop? Paraphrase the definition and give the name of the variable that counts the repetitions in your code.",
+  "solution": "from warehouse.robot import *\n\n# File: fill_shelf.py\n# -------------------\n# Put a parcel on each of the first four squares of the aisle.\n\n\ndef main():\n    for i in range(4):\n        put_parcel()\n        move()\n\n\nif __name__ == '__main__':\n    main()\n"
+}
