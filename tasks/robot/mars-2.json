@@ -1,0 +1,54 @@
+{
+  "id": "mars-2",
+  "week": 2,
+  "type": "robot",
+  "world": "mars",
+  "title": "Turn right",
+  "concepts": ["Defining a function"],
+  "brief": "This time the rock is two squares east of the rover, and the base station where samples are stored is at the bottom of the same column. The program in the editor already describes the whole journey: drive to the rock, collect it, turn right, drive down to the bottom row and put the rock down.\n\nThere is one problem. The rover was shipped from the factory knowing how to `turn_left()`, but nobody taught it to turn right. If you run the program now, Python stops with a NameError, because `turn_right` is an undefined function.\n\nYour job is to define the missing function. A definition starts with the keyword `def`, then the name, then `():`, and the body of the function goes on the indented lines below. Ask yourself: how many left turns make one right turn? Put your new helper function above `main()`.",
+  "vocabulary": [
+    {
+      "term": "define a function",
+      "gloss": "give a name to a set of actions you want the computer to perform, using `def name():`."
+    },
+    {
+      "term": "undefined function",
+      "gloss": "a function that is called but never defined, so Python cannot run it. You will see NameError: name ... is not defined."
+    },
+    {
+      "term": "helper function",
+      "gloss": "a small function that does one step of the job, called from `main()` or from another function."
+    },
+    {
+      "term": "colon",
+      "gloss": "the `:` symbol at the end of `def`, `for`, `while` and `if` lines. It says “an indented block follows”."
+    },
+    {
+      "term": "code block",
+      "gloss": "a group of indented lines that belong together, for example the body of a function."
+    }
+  ],
+  "starterCode": "from rover.marsrover import *\n\n# File: turn_right.py\n# -------------------\n# Collect the rock and deliver it to the base at the bottom.\n\n\ndef main():\n    move()\n    move()\n    pick_rock()\n    turn_right()\n    move()\n    move()\n    put_rock()\n\n\nif __name__ == '__main__':\n    main()\n",
+  "map": {
+    "cols": 5,
+    "rows": 3,
+    "robot": { "x": 1, "y": 3, "dir": "E" },
+    "items": { "3,3": 1 }
+  },
+  "goal": {
+    "items": { "3,1": 1 },
+    "robot": { "x": 3, "y": 1 }
+  },
+  "requires": [
+    {
+      "pattern": "def\\s+turn_right\\s*\\(\\s*\\)\\s*:",
+      "message": "The task asks you to define a function called turn_right."
+    }
+  ],
+  "hints": [
+    "Three left turns bring the rover round to the right.",
+    "The definition looks like this:\n\n```\ndef turn_right():\n    turn_left()\n    turn_left()\n    turn_left()\n```"
+  ],
+  "reflect": "Why did the program fail before you added the definition? What is the difference between defining a function and calling it?",
+    "solution": "from rover.marsrover import *\n\n# File: turn_right.py\n# -------------------\n# Collect the rock and deliver it to the base at the bottom.\n\n\ndef turn_right():\n    turn_left()\n    turn_left()\n    turn_left()\n\n\ndef main():\n    move()\n    move()\n    pick_rock()\n    turn_right()\n    move()\n    move()\n    put_rock()\n\n\nif __name__ == '__main__':\n    main()\n"
+}

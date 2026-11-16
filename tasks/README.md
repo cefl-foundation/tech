@@ -165,6 +165,88 @@ beside their own, and one sentence about the first difference.
 task: the solution passes, the starter code does not, and the solution
 prints the same in real Python as in MiniPy.
 
+## `robot`
+
+A Python program that drives a robot across a grid of squares. The page
+runs it one command at a time and draws the world after each command. It
+is judged by the world at the end: that must be the world that `goal`
+describes. Robot tasks open on `practice-python.html`.
+
+`id`, `week`, `type`, `title`, `concepts`, `brief`, `vocabulary` and
+`hints` are as for a web task. `starterCode`, `requires`, `reflect` and
+`solution` are as for a console task. A robot task has no `tests`. It has
+these three fields of its own:
+
+```json
+"world": "mars",
+"map": {
+  "cols": 6,
+  "rows": 3,
+  "robot": { "x": 1, "y": 3, "dir": "E" },
+  "items": { "4,3": 1 },
+  "walls": [[2, 1, "N"], [3, 1, "N"]]
+},
+"goal": {
+  "items": {},
+  "robot": { "x": 4, "y": 3 }
+}
+```
+
+| field | meaning |
+|---|---|
+| `world` | `mars`, `warehouse` or `ocean`. It chooses the robot's name, the thing it carries, the names of four commands and the colours of the picture. The task's entry in `index.json` has the same `world` |
+| `map` | the world at the start |
+| `goal` | the world as it must be at the end |
+
+Squares are counted as on a graph: column 1 is on the left and row 1 is at
+the bottom. A square is written as `"column,row"`, so `"4,3"` is column 4,
+row 3. A direction is `"N"`, `"E"`, `"S"` or `"W"`, and north is up the
+picture.
+
+| in `map` | meaning |
+|---|---|
+| `cols`, `rows` | how many columns and rows the grid has |
+| `robot` | the square the robot starts on (`x` is the column, `y` is the row) and the way it faces. Without `dir` it faces east |
+| `items` | what lies on the squares at the start: the square, then how many. Leave it out if every square is empty |
+| `walls` | each entry is `[column, row, side]`. It blocks that side of that square, from both sides. The edge of the grid is always blocked. Leave it out if there are no walls |
+
+| in `goal` | meaning |
+|---|---|
+| `items` | everything that must lie on the squares at the end. A square that is not listed must be empty, so `{}` means "nothing anywhere" |
+| `robot` | where the robot must finish. Leave it out if any square will do. Add `dir` only if the direction matters |
+
+In a robot task, a `requires` message is shown when the goal is reached
+but the code does not match the pattern. A word in a comment does not
+count. A hint can hold a code sample between two lines of three backticks,
+as a brief can.
+
+What a program can call:
+
+| command | does |
+|---|---|
+| `move()` | one square forward. The program stops if a wall or the edge is in the way |
+| `turn_left()` | a quarter turn to the left. There is no `turn_right()`: students write it |
+| `pick_rock()`, `pick_parcel()`, `pick_bottle()` | picks up one thing from this square. The program stops if there is none |
+| `put_rock()`, `put_parcel()`, `put_bottle()` | puts one thing down on this square. The robot never runs out |
+
+| question | is True when |
+|---|---|
+| `front_is_clear()`, `left_is_clear()`, `right_is_clear()` | the robot could move that way |
+| `front_is_blocked()`, `left_is_blocked()`, `right_is_blocked()` | it could not |
+| `rock_present()`, `parcel_present()`, `bottle_present()` | at least one thing lies on this square |
+| `no_rock_present()`, `no_parcel_present()`, `no_bottle_present()` | nothing lies on it |
+| `facing_north()`, `facing_east()`, `facing_south()`, `facing_west()` | the robot faces that way |
+| `not_facing_north()` and the other three | it does not |
+
+Each world has its own four names: a Mars task has `pick_rock()` and no
+`pick_parcel()`. The import line at the top of a starter, such as
+`from rover.marsrover import *`, does nothing on this site. It is there
+because a real Python file would need it.
+
+`tests/python-solutions.test.js` checks three things for every robot
+task: its map and its goal fit its world, its solution reaches the goal,
+and its starter code does not.
+
 ## `html-editor`
 
 ```json

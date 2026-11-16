@@ -1,0 +1,59 @@
+{
+  "id": "mars-3",
+  "week": 2,
+  "type": "robot",
+  "world": "mars",
+  "title": "Around the crater",
+  "concepts": ["Decomposition"],
+  "brief": "The rover is in the middle of the top row, facing east, and a rock sample lies two squares ahead. The base station is on the far left of the same row - but between the rover and the base there is a small crater. The rover cannot drive into the crater; it must go round it through the row below.\n\nThis journey has several clearly separate steps: collect the rock, turn around, go round the crater, and deliver the rock. Good programmers use decomposition: instead of writing one long list of commands in `main()`, they break the problem into smaller sub-problems and write one short helper function for each. Then `main()` simply calls those functions in order, so it reads almost like English.\n\nWrite at least these two helpers: `turn_right()` and `turn_around()`. You may add more, for example `go_around_crater()`. Remember that Python needs a function to be defined before the program reaches the line that calls it, so put your helpers above the `if __name__` lines.",
+  "vocabulary": [
+    {
+      "term": "decomposition",
+      "gloss": "breaking a large problem into smaller, more manageable sub-problems - in code, into several short functions."
+    },
+    {
+      "term": "top-down design",
+      "gloss": "starting with the most general step of the problem (what `main()` should do) and then working out the details of each step."
+    },
+    {
+      "term": "helper function",
+      "gloss": "a small function that does one step of the job, called from `main()` or from another function."
+    },
+    {
+      "term": "control flow",
+      "gloss": "the order in which the statements of a program are executed."
+    },
+    {
+      "term": "source code",
+      "gloss": "the text of a program, written by a programmer."
+    }
+  ],
+  "starterCode": "from rover.marsrover import *\n\n# File: crater.py\n# ---------------\n# Collect the rock, turn around and deliver it to the base at the\n# far left. The crater is in the way, so go round it.\n\n\ndef main():\n    collect_rock()\n    turn_around()\n    go_around_crater()\n    put_rock()\n\n\nif __name__ == '__main__':\n    main()\n",
+  "map": {
+    "cols": 6,
+    "rows": 2,
+    "robot": { "x": 3, "y": 2, "dir": "E" },
+    "items": { "5,2": 1 },
+    "walls": [[2, 2, "W"], [2, 2, "E"], [2, 2, "S"]]
+  },
+  "goal": {
+    "items": { "1,2": 1 },
+    "robot": { "x": 1, "y": 2 }
+  },
+  "requires": [
+    {
+      "pattern": "def\\s+turn_around\\s*\\(",
+      "message": "Define a helper function called turn_around."
+    },
+    {
+      "pattern": "def\\s+turn_right\\s*\\(",
+      "message": "Define a helper function called turn_right."
+    }
+  ],
+  "hints": [
+    "A `turn_around()` is two left turns.",
+    "The dark lines around the crater are walls. To go round: turn left (facing south), move, turn right (facing west), move twice, turn right (north), move, turn left (west) - but check the rover ends on the base square."
+  ],
+  "reflect": "Explain the principle of decomposition using this task as your example. Which helper functions did you write and why?",
+    "solution": "from rover.marsrover import *\n\n# File: crater.py\n# ---------------\n# Collect the rock, turn around and deliver it to the base at the\n# far left. The crater is in the way, so go round it.\n\n\ndef turn_right():\n    turn_left()\n    turn_left()\n    turn_left()\n\n\ndef turn_around():\n    turn_left()\n    turn_left()\n\n\ndef collect_rock():\n    move()\n    move()\n    pick_rock()\n\n\ndef go_around_crater():\n    turn_left()\n    move()\n    turn_right()\n    move()\n    move()\n    move()\n    move()\n    turn_right()\n    move()\n    turn_left()\n\n\ndef main():\n    collect_rock()\n    turn_around()\n    go_around_crater()\n    put_rock()\n\n\nif __name__ == '__main__':\n    main()\n"
+}

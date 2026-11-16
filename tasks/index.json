@@ -11,6 +11,22 @@
           "file": "robot/mars-1.json",
           "title": "First drive",
           "concept": "Calling functions"
+        },
+        {
+          "id": "mars-2",
+          "type": "robot",
+          "world": "mars",
+          "file": "robot/mars-2.json",
+          "title": "Turn right",
+          "concept": "Defining a function"
+        },
+        {
+          "id": "mars-3",
+          "type": "robot",
+          "world": "mars",
+          "file": "robot/mars-3.json",
+          "title": "Around the crater",
+          "concept": "Decomposition"
         }
       ]
     },

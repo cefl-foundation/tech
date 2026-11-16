@@ -44,5 +44,5 @@
     "The rock is three squares away, so you need three `move()` calls before `pick_rock()`."
   ],
   "reflect": "What does it mean to call a function? Explain it in your own words, using one of the rover commands as an example.",
-  "solution": ""
+    "solution": "from rover.marsrover import *\n\n# File: first_drive.py\n# --------------------\n# Drive the rover to the rock sample and collect it.\n\ndef main():\n    move()\n    move()\n    move()\n    pick_rock()\n\n\nif __name__ == '__main__':\n    main()\n"
 }
