@@ -176,6 +176,71 @@ test("maxSteps changes the limit", () => {
   assert.ok(error.msg.includes("more than 50 steps"), error.msg);
 });
 
+// ---------- a function that calls itself ----------
+
+test("a function that calls itself for ever is stopped with a RecursionError", () => {
+  const code = [
+    "def spin():",
+    "    spin()",
+    "",
+    "spin()"
+  ].join("\n");
+  const error = errorOf(code);
+  assert.equal(error.kind, "RecursionError");
+  assert.equal(error.line, 2);
+  assert.ok(error.msg.includes("more than 100 function calls"), error.msg);
+  assert.ok(error.msg.includes("inside your function spin()"), error.msg);
+});
+
+// A program that adds up the whole numbers from 1 to n. total(3) calls
+// total(2), which calls total(1): three calls inside each other.
+function totalProgram(n) {
+  return [
+    "def total(n):",
+    "    if n == 1:",
+    "        return 1",
+    "    return n + total(n - 1)",
+    "",
+    "print(total(" + n + "))"
+  ].join("\n");
+}
+
+test("100 calls inside each other are allowed", () => {
+  assert.equal(run(totalProgram(100)), "5050\n");
+});
+
+test("101 calls inside each other are stopped", () => {
+  const error = errorOf(totalProgram(101));
+  assert.equal(error.kind, "RecursionError");
+  assert.equal(error.line, 4);
+});
+
+test("150 calls one after the other are allowed", () => {
+  const code = [
+    "def one():",
+    "    return 1",
+    "",
+    "n = 0",
+    "for i in range(150):",
+    "    n += one()",
+    "print(n)"
+  ].join("\n");
+  assert.equal(run(code), "150\n");
+});
+
+test("two functions that call each other for ever are stopped too", () => {
+  const code = [
+    "def ping():",
+    "    pong()",
+    "",
+    "def pong():",
+    "    ping()",
+    "",
+    "ping()"
+  ].join("\n");
+  assert.equal(errorOf(code).kind, "RecursionError");
+});
+
 // ---------- what the page gets ----------
 
 test("a command marked step pauses the program after each call", () => {
