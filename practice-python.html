@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Python practice - Tech Practice Hub</title>
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/task-list.css">
+  <link rel="stylesheet" href="css/task-rows.css">
+  <link rel="stylesheet" href="css/task-page.css">
+</head>
+<body>
+  <div data-layout="header"></div>
+  <div data-layout="nav"></div>
+  <script src="js/dom.js"></script>
+  <script src="js/layout.js"></script>
+
+  <main id="main" tabindex="-1">
+    <section class="notice">
+      <div class="wrap">
+        <h1>Python practice</h1>
+        <p>Loading the tasks…</p>
+        <noscript><p>This page needs JavaScript. Please switch it on in your browser.</p></noscript>
+      </div>
+    </section>
+  </main>
+
+  <div data-layout="footer"></div>
+
+  <script src="js/tasks.js"></script>
+  <script src="js/progress.js"></script>
+  <script src="js/shell.js"></script>
+  <script src="js/task-rows.js"></script>
+  <script src="js/task-page.js"></script>
+  <script>
+    // What this page shows. js/shell.js draws it.
+    Shell.init({
+      page: "practice-python.html",
+      title: "Python practice",
+      eyebrow: "Weeks 2 to 4 · Programming in Python",
+      lede: "Each brief is written in the language of the lectures, so read it slowly. The words in bold are the terms you need to know.",
+      listScreen: TaskRows,
+      strands: [
+        {
+          type: "console",
+          key: "console",
+          title: "Your first programs",
+          sub: "Week 3 · Python basics",
+          text: "No robot this time. These programs run in a terminal: they print text, ask the user to type something, store it in variables and do arithmetic with it - exactly the programs from the lecture."
+        }
+      ]
+    });
+  </script>
+</body>
+</html>

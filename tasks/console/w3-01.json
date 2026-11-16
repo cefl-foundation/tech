@@ -1,0 +1,38 @@
+{
+  "id": "console-w3-01",
+  "week": 3,
+  "type": "console",
+  "title": "Hello, world",
+  "brief": "Goodbye rover, hello Python. Now you will write ordinary Python programs that run in a terminal: a text window where a program can show its results and where a person can type answers.\n\nIt is a tradition that a programmer’s first program writes the words hello, world! on the screen. The print function does exactly that: it takes some text between the parentheses and displays it. Text in a program is called a string and is always written between quotes.\n\nMake this program print exactly `hello, world!` - lower case, with a comma and an exclamation mark. Python compares text character by character, so spelling and punctuation matter.",
+  "vocabulary": [
+    {
+      "term": "print",
+      "gloss": "the `print()` function writes text to the terminal (the screen)."
+    },
+    {
+      "term": "string",
+      "gloss": "a piece of text, written between quotes: `\"hello\"` or `'10'`."
+    },
+    {
+      "term": "terminal",
+      "gloss": "the text window where a program shows its output and where the user types input."
+    },
+    {
+      "term": "main function",
+      "gloss": "the function where the program starts. It usually controls the program by calling other functions."
+    }
+  ],
+  "starterCode": "\"\"\"\nFile: helloworld.py\n-------------------\nThis is our first Python program.\n\"\"\"\n\n\ndef main():\n    pass\n\n\n# This provided line is required at the end of a Python\n# file to call the main() function.\nif __name__ == '__main__':\n    main()\n",
+  "tests": [
+    {
+      "stdin": [],
+      "expectedStdout": "hello, world!\n"
+    }
+  ],
+  "hints": [
+    "`print(\"hello, world!\")`",
+    "The text must be inside quotes, and the whole thing inside the parentheses of `print( )`."
+  ],
+  "reflect": "What does the print function do? What happens if you forget the quotes around the text?",
+  "solution": ""
+}

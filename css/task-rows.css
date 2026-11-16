@@ -1,0 +1,102 @@
+
+
+/* How many tasks are done: a filled label beside the outlined link. */
+.pagehead .chip.on {
+  background: var(--white);
+  color: var(--red);
+}
+
+.tasklist { padding: 40px 0 56px; }
+
+.tasklist .group { margin-bottom: 36px; }
+
+/* The name of the group on the left, what it is about beside it. */
+.group-head {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  gap: 24px;
+  align-items: start;
+  margin-bottom: 16px;
+  padding-top: 14px;
+  border-top: 4px solid var(--black);
+}
+
+.group-head .sub {
+  margin: 0 0 4px;
+  color: var(--grey);
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.group-head h2 { font-size: 40px; }
+
+.group-head .text {
+  max-width: 70ch;
+  margin: 0;
+  color: var(--grey);
+  font-size: 15px;
+}
+
+@media (max-width: 720px) {
+  .group-head {
+    grid-template-columns: 1fr;
+    gap: 6px;
+  }
+}
+
+.tasklist ul {
+  margin: 0;
+  padding: 0;
+  border-bottom: 1px solid var(--line);
+  list-style: none;
+}
+
+/* One task: its number, its title and concept, and Done or To do. */
+.trow {
+  display: grid;
+  grid-template-columns: 56px 1fr auto;
+  gap: 16px;
+  align-items: center;
+  padding: 14px 0;
+  border-top: 1px solid var(--line);
+  text-decoration: none;
+}
+
+.trow .n {
+  color: var(--red);
+  font-family: var(--display);
+  font-size: 34px;
+  line-height: 1;
+}
+
+.trow .t {
+  display: block;
+  font-size: 17px;
+}
+
+.trow .c {
+  display: block;
+  color: var(--grey);
+  font-size: 13px;
+}
+
+.trow .s {
+  padding: 6px 10px;
+  border: 2px solid var(--black);
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.trow:hover .t { text-decoration: underline; }
+
+/* A finished task: a green number and a filled green label. The label
+   says Done in words, so the colour is never the only sign. */
+.trow.done .n { color: var(--green); }
+
+.trow.done .s {
+  border-color: var(--green);
+  background: var(--green);
+  color: var(--white);
+}
