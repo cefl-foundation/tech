@@ -1,0 +1,59 @@
+{
+  "id": "sea-4",
+  "week": 2,
+  "type": "robot",
+  "world": "ocean",
+  "title": "Reef hurdles",
+  "concepts": ["if-else and decomposition"],
+  "brief": "The drone must cross the bay from the left side to the right side along the bottom row, but reef walls of different heights stick up from the seabed. When the way ahead is clear, the drone simply moves. When a reef blocks the way, the drone has to climb: go up until it can pass, swim over the top, and come back down on the other side.\n\nThis is the classic steeplechase problem. Use an if-else statement inside a loop that crosses the bay: `if front_is_clear():` move, `else:` jump the reef. Write `jump_reef()` as a helper, and decompose it further into `climb_up()`, `swim_over()` and `climb_down()` if that helps.\n\nThe reefs have different heights, so climbing must use a while loop with the sensor `right_is_blocked()`, not a fixed number of moves. Take it step by step - this is the hardest task of the week.",
+  "vocabulary": [
+    {
+      "term": "if-else statement",
+      "gloss": "a decision with two paths: one block runs if the condition is true, the `else` block runs if it is false."
+    },
+    {
+      "term": "decomposition",
+      "gloss": "breaking a large problem into smaller, more manageable sub-problems - in code, into several short functions."
+    },
+    {
+      "term": "pre-condition",
+      "gloss": "what must be true before a function is called, for example “the robot is facing east”."
+    },
+    {
+      "term": "post-condition",
+      "gloss": "what is true after the function has finished, for example “the robot is on the next corner, facing east”."
+    },
+    {
+      "term": "while loop",
+      "gloss": "a loop that keeps repeating as long as a condition is true: `while front_is_clear():`"
+    }
+  ],
+  "starterCode": "from ocean.drone import *\n\n# File: reef_hurdles.py\n# ---------------------\n# Cross the bay from left to right, climbing over each reef.\n# The bay is 9 squares wide, so the drone crosses 8 gaps.\n\n\ndef turn_right():\n    turn_left()\n    turn_left()\n    turn_left()\n\n\n# Pre-condition:  facing east, at the bottom of a reef\n# Post-condition: facing east, at the bottom, on the other side\ndef jump_reef():\n    pass\n\n\ndef main():\n    for i in range(8):\n        if front_is_clear():\n            move()\n        else:\n            jump_reef()\n\n\nif __name__ == '__main__':\n    main()\n",
+  "map": {
+    "cols": 9,
+    "rows": 4,
+    "robot": { "x": 1, "y": 1, "dir": "E" },
+    "items": {},
+    "walls": [[2, 1, "E"], [4, 1, "E"], [4, 2, "E"], [6, 1, "E"], [7, 1, "E"], [7, 2, "E"], [7, 3, "E"]]
+  },
+  "goal": {
+    "items": {},
+    "robot": { "x": 9, "y": 1 }
+  },
+  "requires": [
+    {
+      "pattern": "\\belse\\b",
+      "message": "Keep the if-else decision in the loop."
+    },
+    {
+      "pattern": "\\bwhile\\b",
+      "message": "Use a while loop when climbing - the reefs have different heights."
+    }
+  ],
+  "hints": [
+    "`climb_up()`: turn left, then `while right_is_blocked(): move()`, then turn right.",
+    "`swim_over()` is one `move()`. `climb_down()`: turn right, `while front_is_clear(): move()`, turn left."
+  ],
+  "reflect": "Describe how you decomposed jump_reef(). Which sensor did you use to climb and why was a while loop necessary?",
+  "solution": "from ocean.drone import *\n\n# File: reef_hurdles.py\n# ---------------------\n# Cross the bay from left to right, climbing over each reef.\n# The bay is 9 squares wide, so the drone crosses 8 gaps.\n\n\ndef turn_right():\n    turn_left()\n    turn_left()\n    turn_left()\n\n\n# Pre-condition:  facing east, at the bottom of a reef\n# Post-condition: facing east, at the bottom, on the other side\ndef jump_reef():\n    climb_up()\n    swim_over()\n    climb_down()\n\n\ndef climb_up():\n    turn_left()\n    while right_is_blocked():\n        move()\n    turn_right()\n\n\ndef swim_over():\n    move()\n\n\ndef climb_down():\n    turn_right()\n    while front_is_clear():\n        move()\n    turn_left()\n\n\ndef main():\n    for i in range(8):\n        if front_is_clear():\n            move()\n        else:\n            jump_reef()\n\n\nif __name__ == '__main__':\n    main()\n"
+}

@@ -59,6 +59,46 @@
           "file": "robot/wh-4.json",
           "title": "Fix the fence post",
           "concept": "The while loop and off-by-one errors"
+        },
+                {
+          "id": "sea-1",
+          "type": "robot",
+          "world": "ocean",
+          "file": "robot/sea-1.json",
+          "title": "Swim to the reef",
+          "concept": "while with a sensor"
+        },
+        {
+          "id": "sea-2",
+          "type": "robot",
+          "world": "ocean",
+          "file": "robot/sea-2.json",
+          "title": "Find the bottle",
+          "concept": "Negative conditions"
+        },
+        {
+          "id": "sea-3",
+          "type": "robot",
+          "world": "ocean",
+          "file": "robot/sea-3.json",
+          "title": "Only where needed",
+          "concept": "The if-statement"
+        },
+        {
+          "id": "sea-4",
+          "type": "robot",
+          "world": "ocean",
+          "file": "robot/sea-4.json",
+          "title": "Reef hurdles",
+          "concept": "if-else and decomposition"
+        },
+        {
+          "id": "sea-5",
+          "type": "robot",
+          "world": "ocean",
+          "file": "robot/sea-5.json",
+          "title": "Sweep the bay",
+          "concept": "Challenge: putting it all together"
         }
       ]
     },
