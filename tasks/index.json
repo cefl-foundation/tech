@@ -45,6 +45,20 @@
           "file": "console/w3-06.json",
           "title": "Next year",
           "concept": "Putting the basics together"
+        },
+        {
+          "id": "console-w3-07",
+          "type": "console",
+          "file": "console/w3-07.json",
+          "title": "The five times table",
+          "concept": "A for loop that counts"
+        },
+        {
+          "id": "console-w3-08",
+          "type": "console",
+          "file": "console/w3-08.json",
+          "title": "Pass or fail?",
+          "concept": "if and else"
         }
       ]
     },
