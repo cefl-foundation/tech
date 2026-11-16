@@ -193,35 +193,71 @@ var MiniPy = (function () {
     return toks;
   }
   /* ---------------- parser ---------------- */
+  // The parser turns the list of tokens into a tree that shows what
+  // belongs to what. Every part of the tree is a node: an object whose k
+  // says what kind of thing it is, with the line it came from.
+  //
+  //   move()            { k: 'expr', expr: { k: 'call', name: 'move', ... } }
+  //   steps = 3         { k: 'assign', name: 'steps', op: '=', value: ... }
+  //   if ...: / else:   { k: 'if', branches: [{ test, body }], orelse: ... }
+  //
+  // A body is a list of nodes, one for each line of the block. That is
+  // how a block sits inside its if, and an if inside its def.
+  //
+  // The parser never runs anything. It only reads. It keeps the tokens
+  // and i, the number of the next token it has not read yet.
   function Parser(toks) { this.toks = toks; this.i = 0; }
+
+  // Four small tools that all the other functions use.
+
+  // Look at a token without taking it: the next one, or the one k
+  // places after it.
   Parser.prototype.peek = function (k) { return this.toks[this.i + (k || 0)]; };
+  // Take the next token and move on.
   Parser.prototype.next = function () { return this.toks[this.i++]; };
+  // Is the next token of this type? And, if v is given, with this text?
   Parser.prototype.is = function (t, v) { var p = this.peek(); return p.t === t && (v === undefined || p.v === v); };
+  // The next token has to be this one. Take it, or stop with a
+  // SyntaxError that says what was expected and what was found instead.
+  // what is the way to describe the expected token to a student.
   Parser.prototype.expect = function (t, v, what) {
     var p = this.peek();
     if (p.t === t && (v === undefined || p.v === v)) return this.next();
     var got = p.t === 'NEWLINE' ? 'the end of the line' : p.t === 'EOF' ? 'the end of the file' : p.t === 'INDENT' ? 'an indented line' : '"' + p.v + '"';
     throw new PyError('SyntaxError', 'expected ' + (what || (v ? '"' + v + '"' : t.toLowerCase())) + ' but found ' + got, p.line);
   };
+
+  // The whole program: one statement after another until EOF.
   Parser.prototype.program = function () {
     var body = [];
     while (!this.is('EOF')) {
+      // A NEWLINE with no statement in front of it: skip it.
       if (this.is('NEWLINE')) { this.next(); continue; }
+      // An INDENT here means a line is indented with no block to be in.
       if (this.is('INDENT')) throw new PyError('IndentationError', 'unexpected indentation. This line should not be indented.', this.peek().line);
       body.push(this.statement());
     }
     return body;
   };
+
+  // A block: the lines that belong to a def, if, elif, else, while or
+  // for line. It starts after the colon and comes back as a list of nodes.
+  // In tokens a block looks like this:  :  NEWLINE  INDENT  ...  DEDENT
   Parser.prototype.block = function () {
     this.expect('OP', ':', 'a colon ":" at the end of this line');
+    // The short form, with the block on the same line as the colon.
     if (!this.is('NEWLINE')) { // single-line block  e.g. "if x: move()"
       var s = [this.simple()]; this.expect('NEWLINE'); return s;
     }
+    // The usual form. Take the NEWLINE, then the INDENT must follow.
     this.next();
     while (this.is('NEWLINE')) this.next();
     if (!this.is('INDENT')) throw new PyError('IndentationError', 'expected an indented block after the colon. Indent the lines that belong inside it by 4 spaces.', this.peek().line);
     this.next();
     var body = [];
+    // Read statements until the DEDENT that closes this block. A block
+    // inside this one takes its own INDENT and DEDENT while it is read,
+    // so the DEDENT we meet here is always ours.
     while (!this.is('DEDENT') && !this.is('EOF')) {
       if (this.is('NEWLINE')) { this.next(); continue; }
       body.push(this.statement());
@@ -229,19 +265,27 @@ var MiniPy = (function () {
     if (this.is('DEDENT')) this.next();
     return body;
   };
+
+  // One statement. def, if, while and for own a block, so they are read
+  // here. Every other statement fits on one line: see simple().
   Parser.prototype.statement = function () {
     var p = this.peek();
     if (p.t === 'KW') {
+      // def name(parameter, parameter):  followed by a block
       if (p.v === 'def') {
         this.next();
         var name = this.expect('NAME', undefined, 'a function name after "def"');
         this.expect('OP', '(', '"(" after the function name');
         var params = [];
+        // The names between the brackets, with a comma after each but the last.
         while (!this.is('OP', ')')) { params.push(this.expect('NAME').v); if (this.is('OP', ',')) this.next(); }
         this.expect('OP', ')');
         var body = this.block();
         return { k: 'def', name: name.v, params: params, body: body, line: p.line };
       }
+      // if test:  followed by a block, then any number of  elif test:
+      // blocks, then perhaps an  else:  block. Each test goes into branches
+      // with its block. The else block goes into orelse.
       if (p.v === 'if') {
         this.next();
         var node = { k: 'if', branches: [], orelse: null, line: p.line };
@@ -250,7 +294,10 @@ var MiniPy = (function () {
         if (this.is('KW', 'else')) { this.next(); node.orelse = this.block(); }
         return node;
       }
+      // while test:  followed by a block
       if (p.v === 'while') { this.next(); var t = this.expr(); return { k: 'while', test: t, body: this.block(), line: p.line }; }
+      // for name in something:  followed by a block. The something is
+      // nearly always range(...).
       if (p.v === 'for') {
         this.next();
         var v = this.expect('NAME', undefined, 'a variable name after "for"');
@@ -258,50 +305,103 @@ var MiniPy = (function () {
         var it = this.expr();
         return { k: 'for', v: v.v, iter: it, body: this.block(), line: p.line };
       }
+      // An else or elif that is not straight after an if block.
       if (p.v === 'else' || p.v === 'elif') throw new PyError('SyntaxError', '"' + p.v + '" must come straight after an "if" block, at the same level of indentation', p.line);
     }
+    // Not one of the four: a one-line statement. Nothing may follow it
+    // on its line.
     var s = this.simple();
     if (!this.is('EOF')) this.expect('NEWLINE', undefined, 'the end of the line');
     return s;
   };
+
+  // A statement that fits on one line.
   Parser.prototype.simple = function () {
     var p = this.peek();
     if (p.t === 'KW') {
+      // Three statements that are one word each.
       if (p.v === 'pass') { this.next(); return { k: 'pass', line: p.line }; }
       if (p.v === 'break') { this.next(); return { k: 'break', line: p.line }; }
       if (p.v === 'continue') { this.next(); return { k: 'continue', line: p.line }; }
+      // return, with a value after it or with nothing.
       if (p.v === 'return') { this.next(); var val = (this.is('NEWLINE') || this.is('EOF')) ? null : this.expr(); return { k: 'return', value: val, line: p.line }; }
+      // An import that the tokenizer did not skip. Read to the end of
+      // the line and do nothing.
       if (p.v === 'import' || p.v === 'from') { while (!this.is('NEWLINE') && !this.is('EOF')) this.next(); return { k: 'pass', line: p.line }; }
     }
+    // An assignment: a name, then = or += -= *= /= //=, then a value.
+    // The parser has to look two tokens ahead here, because the name
+    // alone does not say whether this is  steps = 3  or  steps().
     if (p.t === 'NAME' && this.peek(1).t === 'OP' && ['=', '+=', '-=', '*=', '/=', '//='].indexOf(this.peek(1).v) >= 0) {
       this.next(); var op = this.next().v; var value = this.expr();
       return { k: 'assign', name: p.v, op: op, value: value, line: p.line };
     }
+    // Anything else is a value on a line of its own. Most often it is a
+    // call, such as move() or print("Hi").
     var e = this.expr();
     return { k: 'expr', expr: e, line: p.line };
   };
+
+  // ----- values (expressions) -----
+
+  // A value such as  2 + 3 * 4  or  not front_is_clear()  is read by a
+  // ladder of functions. Each one calls the one below it first, so the
+  // lower a function is, the more tightly its symbols hold their two sides:
+  //
+  //   expr      the top of the ladder
+  //   orExpr    or
+  //   andExpr   and
+  //   notExpr   not
+  //   compare   ==  !=  <  >  <=  >=
+  //   arith     +  -
+  //   term      *  /  //  %
+  //   factor    a minus or plus sign in front of a value
+  //   atom      one number, text, name or call, or a value in brackets
+  //
+  // In  2 + 3 * 4  arith asks term for its left side and gets 2. It sees
+  // the +, and asks term for its right side. term reads 3, sees the *,
+  // and reads 4 too. So  3 * 4  comes back as one node and becomes the
+  // right side of the +. Nobody had to write a rule about which goes first.
+  //
+  // Most of these functions make a node { k: 'bin', op, l, r }: a symbol
+  // with a left side and a right side. The while loop is for  1 + 2 + 3:
+  // the node made so far becomes the left side of the next one.
   Parser.prototype.expr = function () { return this.orExpr(); };
   Parser.prototype.orExpr = function () { var l = this.andExpr(); while (this.is('KW', 'or')) { var t = this.next(); l = { k: 'bool', op: 'or', l: l, r: this.andExpr(), line: t.line }; } return l; };
   Parser.prototype.andExpr = function () { var l = this.notExpr(); while (this.is('KW', 'and')) { var t = this.next(); l = { k: 'bool', op: 'and', l: l, r: this.notExpr(), line: t.line }; } return l; };
   Parser.prototype.notExpr = function () { if (this.is('KW', 'not')) { var t = this.next(); return { k: 'not', e: this.notExpr(), line: t.line }; } return this.compare(); };
+  // Two comparisons in a row, as in  0 <= mark <= 100, are read as
+  // (0 <= mark) <= 100. Python reads them differently.
   Parser.prototype.compare = function () {
     var l = this.arith();
     while (this.is('OP') && ['==', '!=', '<', '>', '<=', '>='].indexOf(this.peek().v) >= 0) { var t = this.next(); l = { k: 'bin', op: t.v, l: l, r: this.arith(), line: t.line }; }
+    // A single = here is the classic slip:  if steps = 3:
     if (this.is('OP', '=')) throw new PyError('SyntaxError', 'a single "=" assigns a value. To compare two values use "==" (two equals signs).', this.peek().line);
     return l;
   };
   Parser.prototype.arith = function () { var l = this.term(); while (this.is('OP', '+') || this.is('OP', '-')) { var t = this.next(); l = { k: 'bin', op: t.v, l: l, r: this.term(), line: t.line }; } return l; };
   Parser.prototype.term = function () { var l = this.factor(); while (this.is('OP') && ['*', '/', '//', '%'].indexOf(this.peek().v) >= 0) { var t = this.next(); l = { k: 'bin', op: t.v, l: l, r: this.factor(), line: t.line }; } return l; };
+  // -5 becomes { k: 'unary', op: '-', e: the node for 5 }.
   Parser.prototype.factor = function () { if (this.is('OP', '-') || this.is('OP', '+')) { var t = this.next(); return { k: 'unary', op: t.v, e: this.factor(), line: t.line }; } return this.atom(); };
+
+  // The bottom of the ladder: the smallest values.
   Parser.prototype.atom = function () {
     var p = this.next();
+    // A number. With a decimal point it becomes a PyFloat. Without one it
+    // stays a whole number.
     if (p.t === 'NUMBER') return { k: 'num', v: p.v.indexOf('.') >= 0 ? new PyFloat(parseFloat(p.v)) : parseInt(p.v, 10), line: p.line };
+    // Text. Two pieces of text side by side are joined:  "a" "b"  is "ab".
     if (p.t === 'STRING') { var s = p.v; while (this.is('STRING')) s += this.next().v; return { k: 'str', v: s, line: p.line }; }
     if (p.t === 'KW' && p.v === 'True') return { k: 'const', v: true, line: p.line };
     if (p.t === 'KW' && p.v === 'False') return { k: 'const', v: false, line: p.line };
     if (p.t === 'KW' && p.v === 'None') return { k: 'const', v: null, line: p.line };
+    // A value in brackets. The brackets leave no node of their own: they
+    // only decide which values end up on which side of a symbol.
     if (p.t === 'OP' && p.v === '(') { var e = this.expr(); this.expect('OP', ')', 'a closing bracket ")"'); return e; }
     if (p.t === 'NAME') {
+      // A name with a bracket after it is a call. Read the values between
+      // the brackets (args). A value with a name and = in front, such as
+      // end="" in print(), goes into kwargs.
       if (this.is('OP', '(')) {
         this.next(); var args = [], kwargs = {};
         while (!this.is('OP', ')')) {
@@ -312,13 +412,14 @@ var MiniPy = (function () {
         this.next();
         return { k: 'call', name: p.v, args: args, kwargs: kwargs, line: p.line };
       }
+      // A name on its own: most often a variable.
       return { k: 'name', v: p.v, line: p.line };
     }
+    // Anything else cannot start a value.
     if (p.t === 'KW') throw new PyError('SyntaxError', '"' + p.v + '" cannot be used here', p.line);
     var got = p.t === 'NEWLINE' ? 'the end of the line' : p.t === 'EOF' ? 'the end of the file' : p.t === 'INDENT' ? 'an indented line' : p.t === 'DEDENT' ? 'the end of the block' : '"' + p.v + '"';
     throw new PyError('SyntaxError', 'expected a value but found ' + got, p.line);
   };
-
   /* ---------------- values ---------------- */
   function typeName(v) {
     if (v === null || v === undefined) return 'NoneType';
