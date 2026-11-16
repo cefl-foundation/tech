@@ -421,6 +421,16 @@ var MiniPy = (function () {
     throw new PyError('SyntaxError', 'expected a value but found ' + got, p.line);
   };
   /* ---------------- values ---------------- */
+  // The values a program works with are plain JavaScript values:
+  //   a whole number (int)       a JavaScript number     7
+  //   a decimal number (float)   a PyFloat               new PyFloat(3.5)
+  //   text (str)                 a JavaScript string     "hello"
+  //   True and False (bool)      true and false
+  //   None                       null
+  // The functions below make them behave as Python's values do.
+
+  // Python's name for the type of a value. Used by type() and in
+  // error messages.
   function typeName(v) {
     if (v === null || v === undefined) return 'NoneType';
     if (typeof v === 'boolean') return 'bool';
@@ -430,6 +440,9 @@ var MiniPy = (function () {
     if (v && v.fn) return 'function';
     return 'object';
   }
+
+  // A value as print() shows it: None, True, 7, 4.0, hello.
+  // A float always shows a decimal point, so 8 / 2 prints as 4.0.
   function repr(v, line) {
     if (v === null || v === undefined) return 'None';
     if (typeof v === 'boolean') return v ? 'True' : 'False';
@@ -439,11 +452,19 @@ var MiniPy = (function () {
     if (v && v.fn) return '<function ' + v.name + '>';
     return String(v);
   }
+
+  // The plain JavaScript number inside a value: a PyFloat is unwrapped.
   function num(v) { return v instanceof PyFloat ? v.v : v; }
+  // Is this value a number? In Python True and False count as 1 and 0.
   function isNum(v) { return typeof v === 'number' || v instanceof PyFloat || typeof v === 'boolean'; }
+  // Does this value count as true in an if or a while? 0, 0.0, "" and
+  // None count as false, like False itself. Everything else is true.
   function truthy(v) { if (v instanceof PyFloat) return v.v !== 0; return !!v; }
 
+  // Work out  a op b  for one symbol: + - * / // % == != < > <= >=.
   function binop(op, a, b, line) {
+    // + joins two pieces of text. Text + a number is the mistake every
+    // beginner makes, so it gets Python's message and a sentence of advice.
     if (op === '+') {
       if (typeof a === 'string' && typeof b === 'string') return a + b;
       if (typeof a === 'string' || typeof b === 'string') {
@@ -451,14 +472,18 @@ var MiniPy = (function () {
         throw new PyError('TypeError', 'can only concatenate str (not "' + typeName(other) + '") to str. Python cannot add text and a number together - wrap the number in str( ) first.', line);
       }
     }
+    // "ab" * 3 repeats the text.
     if (op === '*' && (typeof a === 'string' || typeof b === 'string')) {
       var s = typeof a === 'string' ? a : b, n = typeof a === 'string' ? b : a;
       if (typeof n === 'number') { var out = ''; for (var i = 0; i < n; i++) out += s; return out; }
     }
+    // == and !=. Two numbers are equal when their values are, so 3 == 3.0.
     if (['==', '!='].indexOf(op) >= 0) {
       var eq = (isNum(a) && isNum(b)) ? num(a) === num(b) : a === b;
       return op === '==' ? eq : !eq;
     }
+    // < > <= >= compare two numbers, or two pieces of text (in
+    // alphabetical order, with capital letters before small ones).
     if (['<', '>', '<=', '>='].indexOf(op) >= 0) {
       if ((isNum(a) && isNum(b)) || (typeof a === 'string' && typeof b === 'string')) {
         var x = num(a), y = num(b);
@@ -466,30 +491,57 @@ var MiniPy = (function () {
       }
       throw new PyError('TypeError', "'" + op + "' not supported between " + typeName(a) + ' and ' + typeName(b), line);
     }
+    // Everything below is arithmetic, so both sides must be numbers.
     if (!isNum(a) || !isNum(b)) throw new PyError('TypeError', 'unsupported operand type(s) for ' + op + ": '" + typeName(a) + "' and '" + typeName(b) + "'", line);
+    // fa: is one of the two a float? Then the answer is a float as well.
+    // The + 0 turns True and False into 1 and 0.
     var fa = a instanceof PyFloat || b instanceof PyFloat, x2 = num(a) + 0, y2 = num(b) + 0, r;
     switch (op) {
       case '+': r = x2 + y2; break;
       case '-': r = x2 - y2; break;
       case '*': r = x2 * y2; break;
+      // / always gives a float: 8 / 2 is 4.0.
       case '/': if (y2 === 0) throw new PyError('ZeroDivisionError', 'division by zero', line); return new PyFloat(x2 / y2);
+      // // gives a whole number and rounds down: -7 // 2 is -4, as in
+      // Python. JavaScript on its own would cut it to -3.
       case '//': if (y2 === 0) throw new PyError('ZeroDivisionError', 'division by zero', line); r = Math.floor(x2 / y2); break;
+      // % is the remainder, with Python's sign rule: -7 % 3 is 2.
       case '%': if (y2 === 0) throw new PyError('ZeroDivisionError', 'division by zero', line); r = ((x2 % y2) + y2) % y2; break;
     }
     return fa ? new PyFloat(r) : r;
   }
-
   /* ---------------- interpreter ---------------- */
+  // How many letters must be added, taken out or changed to turn one word
+  // into the other?  editDistance("pritn", "print") is 2. lookup() uses
+  // it to suggest the right name when a name is misspelt.
   function editDistance(a, b) {
     var m = a.length, n = b.length, prev = [], cur, i, j;
     for (j = 0; j <= n; j++) prev.push(j);
     for (i = 1; i <= m; i++) { cur = [i]; for (j = 1; j <= n; j++) cur.push(Math.min(prev[j] + 1, cur[j - 1] + 1, prev[j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1))); prev = cur; }
     return prev[n];
   }
+
+  // break, continue and return have to leave the block they are in, and
+  // perhaps the blocks around it. The statement hands back a Signal, and
+  // every block and loop on the way out passes it on until one of them
+  // deals with it: a loop for break and continue, a call for return.
   function Signal(type, value) { this.type = type; this.value = value; }
 
+  // A Runner is one run of one program: a new one is made every time a
+  // program is run. opts can hold four things:
+  //   inputs    what the user types: one piece of text for each input()
+  //   builtins  extra commands from the page, such as the robot's move()
+  //   maxSteps  how many steps the program may take (20,000 if not given)
+  //   onPrint   a function to call with each piece of output as it appears
   function Runner(src, opts) {
     opts = opts || {};
+    // out         everything the program has printed so far
+    // inputs      a copy of the list, so the page's own list is not emptied
+    // builtins    the commands that come with MiniPy, plus the page's own
+    // globals     the variables and functions of the top level of the
+    //             program. __name__ is put there at the start, so that
+    //             if __name__ == '__main__':  is true
+    // stepCount   how many steps the program has taken: see tick()
     this.out = '';
     this.inputs = (opts.inputs || []).slice();
     this.builtins = {};
@@ -499,16 +551,30 @@ var MiniPy = (function () {
     this.onPrint = opts.onPrint || null;
     var self = this;
     var B = this.builtins;
+
+    // The built-in commands. Each one is an object with an fn. MiniPy
+    // calls fn with three things:
+    //   args  the values between the brackets, as a list
+    //   kw    the named values, such as end="" in print("Hi", end="")
+    //   line  the line of the call, for an error message
+
+    // print(): the values as text, with a space between them and a new
+    // line at the end, unless sep= or end= says something else.
     B['print'] = { fn: function (args, kw) {
       var sep = kw.sep !== undefined ? kw.sep : ' ', end = kw.end !== undefined ? kw.end : '\n';
       var text = args.map(function (a) { return repr(a); }).join(sep) + end;
       self.write(text); return null; } };
+    // input(): show the question, take the next answer from the list,
+    // show it as if it had been typed, and hand it back. The answer is
+    // always text, which is why programs write int(input(...)).
     B['input'] = { fn: function (args, kw, line) {
       var prompt = args.length ? repr(args[0]) : '';
       self.write(prompt);
       if (!self.inputs.length) throw new PyError('EOFError', 'the program asked for input() but there was nothing left to type in. Check the "Keyboard input" box.', line);
       var v = self.inputs.shift();
       self.write(v + '\n', true); return v; } };
+    // int(): a whole number from a float (the decimals are cut off) or
+    // from text that looks like a whole number.
     B['int'] = { fn: function (a, kw, line) {
       var v = a[0];
       if (typeof v === 'number') return v;
@@ -516,30 +582,57 @@ var MiniPy = (function () {
       if (v instanceof PyFloat) return Math.trunc(v.v);
       if (typeof v === 'string') { var t = v.trim(); if (/^[+-]?\d+$/.test(t)) return parseInt(t, 10); throw new PyError('ValueError', "invalid literal for int() with base 10: '" + v + "'. int( ) can only convert text that looks like a whole number.", line); }
       throw new PyError('TypeError', 'int() cannot convert ' + typeName(v), line); } };
+    // float(): a decimal number from a whole number or from text.
     B['float'] = { fn: function (a, kw, line) {
       var v = a[0];
       if (typeof v === 'number') return new PyFloat(v);
       if (v instanceof PyFloat) return v;
       if (typeof v === 'string') { var t = v.trim(); if (/^[+-]?(\d+\.?\d*|\.\d+)$/.test(t)) return new PyFloat(parseFloat(t)); throw new PyError('ValueError', "could not convert string to float: '" + v + "'", line); }
       throw new PyError('TypeError', 'float() cannot convert ' + typeName(v), line); } };
+    // str(), len(), abs(), round() and type(). round() sends a half
+    // upwards, so round(2.5) is 3. Python gives 2: it sends a half to
+    // the nearest even number.
     B['str'] = { fn: function (a) { return a.length ? repr(a[0]) : ''; } };
     B['len'] = { fn: function (a, kw, line) { if (typeof a[0] === 'string') return a[0].length; throw new PyError('TypeError', "object of type '" + typeName(a[0]) + "' has no len()", line); } };
     B['abs'] = { fn: function (a) { return a[0] instanceof PyFloat ? new PyFloat(Math.abs(a[0].v)) : Math.abs(a[0]); } };
     B['round'] = { fn: function (a) { var n = num(a[0]); if (a.length > 1) { var d = Math.pow(10, a[1]); return new PyFloat(Math.round(n * d) / d); } return Math.round(n); } };
     B['type'] = { fn: function (a) { return "<class '" + typeName(a[0]) + "'>"; } };
+    // range(): the whole numbers to go through in a for loop, as a list
+    // inside an object. range(4) is 0 1 2 3. range(1, 4) is 1 2 3.
     B['range'] = { fn: function (a, kw, line) {
       for (var i = 0; i < a.length; i++) if (typeof a[i] !== 'number') throw new PyError('TypeError', "'" + typeName(a[i]) + "' object cannot be interpreted as an integer. range( ) needs a whole number (an int).", line);
       var start = a.length > 1 ? a[0] : 0, stop = a.length > 1 ? a[1] : a[0], step = a.length > 2 ? a[2] : 1;
       if (stop === undefined) throw new PyError('TypeError', 'range() needs a number, e.g. range(4)', line);
       var out = []; if (step > 0) for (var x = start; x < stop; x += step) out.push(x); else if (step < 0) for (var y = start; y > stop; y += step) out.push(y);
       return { list: out }; } };
+
+    // The page's own commands join the list. One with the same name as a
+    // command above takes its place.
     if (opts.builtins) for (var k in opts.builtins) B[k] = opts.builtins[k];
+    // Read the whole program now. A mistake the tokenizer or the parser
+    // finds stops everything here, before a single line has run.
     this.ast = new Parser(tokenize(src)).program();
   }
+  // Add text to the output and tell the page. isInput is true for the
+  // answer that input() shows, so the page can give it another colour.
   Runner.prototype.write = function (t, isInput) { this.out += t; if (this.onPrint) this.onPrint(t, !!isInput); };
+
+  // Count one step. A program that takes too many is stopped: this is
+  // what keeps  while True:  from freezing the page. A step is counted
+  // for every statement, every turn of a loop and every call of one of
+  // the student's own functions.
   Runner.prototype.tick = function (line) {
     if (++this.stepCount > this.maxSteps) throw new PyError('RuntimeError', 'the program has run more than ' + this.maxSteps + ' steps and was stopped. This usually means a loop never ends - check the condition of your while loop.', line);
   };
+
+  // Run the program. This is a generator (function*): calling run() runs
+  // nothing yet. It hands back an object, and each call of its next()
+  // runs the program up to the next pause. The pauses are made by one
+  // line near the end of evalExpr(), after each robot command. Between
+  // two pauses the page draws the robot. A test, or a console program,
+  // simply asks for the next step until there are none left.
+  //
+  // yield* means: run that other generator here, and pass on its pauses.
   Runner.prototype.run = function* () {
     var self = this;
     // define all functions first (hoisting like Python does when executed top-down is not exact, but this
@@ -549,6 +642,9 @@ var MiniPy = (function () {
       if (s.k === 'def') this.globals[s.name] = { fn: null, name: s.name, def: s };
     }
     var calledMain = false;
+
+    // Then run the other lines of the top level, from top to bottom.
+    // Their variables live in globals.
     for (var j = 0; j < this.ast.length; j++) {
       var st = this.ast[j];
       if (st.k === 'def') continue;
@@ -558,6 +654,9 @@ var MiniPy = (function () {
     }
     return this.out;
   };
+
+  // Run the lines of a block in order. If one of them hands back a
+  // Signal, stop there and pass it on.
   Runner.prototype.execBlock = function* (body, env) {
     for (var i = 0; i < body.length; i++) {
       var sig = yield* this.execStmt(body[i], env);
@@ -565,15 +664,26 @@ var MiniPy = (function () {
     }
     return null;
   };
+
+  // Run one statement. env is where its variables live: globals at the
+  // top level, or the variables of the function that is running.
   Runner.prototype.execStmt = function* (s, env, top) {
     this.tick(s.line);
     switch (s.k) {
+      // pass does nothing.
       case 'pass': return null;
+      // break, continue and return only make a Signal. The loop or the
+      // call that it is meant for acts on it.
       case 'break': return new Signal('break');
       case 'continue': return new Signal('continue');
       case 'return': return new Signal('return', s.value ? (yield* this.evalExpr(s.value, env)) : null);
+      // A def inside a block. (The defs of the top level were noted by
+      // run() before the program started.)
       case 'def':
         env[s.name] = { fn: null, name: s.name, def: s }; return null;
+      // Work out the value, then store it under the name. For += and the
+      // others the variable must have a value already: the sign without
+      // its = says what to do with the old value and the new one.
       case 'assign': {
         var v = yield* this.evalExpr(s.value, env);
         if (s.op !== '=') {
@@ -582,11 +692,16 @@ var MiniPy = (function () {
         }
         env[s.name] = v; return null;
       }
+      // A value on a line of its own, nearly always a call. A function's
+      // name without brackets does nothing in Python, which puzzles
+      // beginners, so MiniPy stops and says what is missing.
       case 'expr': {
         var r = yield* this.evalExpr(s.expr, env);
         if (s.expr.k === 'name' && r && r.fn !== undefined) throw new PyError('SyntaxError', "'" + s.expr.v + "' is a function. To call it you need brackets: " + s.expr.v + "()", s.line);
         return null;
       }
+      // Go through the tests in order. Run the block of the first one
+      // that is true, and no other. If none is true, run the else block.
       case 'if': {
         for (var b = 0; b < s.branches.length; b++) {
           if (truthy(yield* this.evalExpr(s.branches[b].test, env))) return yield* this.execBlock(s.branches[b].body, env);
@@ -594,6 +709,9 @@ var MiniPy = (function () {
         if (s.orelse) return yield* this.execBlock(s.orelse, env);
         return null;
       }
+      // Test, run the block, test again. break leaves the loop. return
+      // leaves it too and travels on. continue needs nothing: the block
+      // has stopped already, so the loop goes round again.
       case 'while': {
         while (truthy(yield* this.evalExpr(s.test, env))) {
           this.tick(s.line);
@@ -602,6 +720,9 @@ var MiniPy = (function () {
         }
         return null;
       }
+      // Work out what to go through: the numbers of a range(), or the
+      // characters of a piece of text. Put each one into the variable
+      // in turn and run the block.
       case 'for': {
         var it = yield* this.evalExpr(s.iter, env);
         var items = it && it.list ? it.list : (typeof it === 'string' ? it.split('') : null);
@@ -616,6 +737,14 @@ var MiniPy = (function () {
     }
     throw new PyError('RuntimeError', 'unknown statement', s.line);
   };
+
+  // Find what a name stands for. Three places, in this order:
+  //   1. the variables of the function that is running (env)
+  //   2. the top level of the program (globals)
+  //   3. the built-in commands
+  // If it is in none of them the name is a NameError. The message
+  // suggests the nearest name that does exist: one that differs only in
+  // capital letters, or one that is one or two letters away.
   Runner.prototype.lookup = function (name, env, line) {
     if (name in env) return env[name];
     if (name in this.globals) return this.globals[name];
@@ -630,24 +759,39 @@ var MiniPy = (function () {
     if (best) hint = ' Did you mean "' + best + '"?' + (bestD === 0 ? ' Names are case sensitive.' : ' Check the spelling.');
     throw new PyError('NameError', "name '" + name + "' is not defined." + (hint || ' Check the spelling, or define it with "def ' + name + '():" if it is a function.'), line);
   };
+
+  // Work out the value of a node. The parser built a tree, so a value
+  // that has parts works out its parts first, by calling itself.
   Runner.prototype.evalExpr = function* (e, env) {
     switch (e.k) {
+      // A number, a piece of text, True, False or None is its own value.
       case 'num': case 'str': case 'const': return e.v;
+      // A name stands for whatever lookup() finds.
       case 'name': return this.lookup(e.v, env, e.line);
+      // A minus or a plus sign in front of a number.
       case 'unary': { var v = yield* this.evalExpr(e.e, env); if (!isNum(v)) throw new PyError('TypeError', "bad operand type for unary " + e.op + ": '" + typeName(v) + "'", e.line); return e.op === '-' ? (v instanceof PyFloat ? new PyFloat(-v.v) : -v) : v; }
       case 'not': return !truthy(yield* this.evalExpr(e.e, env));
+      // and, or. The right side is only worked out when it is needed:
+      // in  front_is_clear() and move()  nothing moves if the way is blocked.
       case 'bool': {
         var l = yield* this.evalExpr(e.l, env);
         if (e.op === 'and') return truthy(l) ? (yield* this.evalExpr(e.r, env)) : l;
         return truthy(l) ? l : (yield* this.evalExpr(e.r, env));
       }
+      // A symbol with two sides. Work out the left side, then the right
+      // side, then let binop() put them together.
       case 'bin': { var a = yield* this.evalExpr(e.l, env); var b = yield* this.evalExpr(e.r, env); return binop(e.op, a, b, e.line); }
+      // A call. Find the function, then work out the values in the brackets.
       case 'call': {
         var f = this.lookup(e.name, env, e.line);
         var args = [];
         for (var i = 0; i < e.args.length; i++) args.push(yield* this.evalExpr(e.args[i], env));
         var kw = {};
         for (var k in e.kwargs) kw[k] = yield* this.evalExpr(e.kwargs[k], env);
+        // One of the student's own functions. It gets a new, empty set of
+        // variables (local) that holds its parameters. That is why a
+        // variable made in one function cannot be seen in another. The
+        // value of the call is whatever return hands back, or None.
         if (f && f.def) {
           if (args.length !== f.def.params.length) throw new PyError('TypeError', e.name + '() takes ' + f.def.params.length + ' argument(s) but ' + args.length + ' were given', e.line);
           var local = {};
@@ -656,9 +800,13 @@ var MiniPy = (function () {
           var sig = yield* this.execBlock(f.def.body, local);
           return sig && sig.type === 'return' ? sig.value : null;
         }
+        // A built-in command. arity is the number of values it must get.
         if (f && f.fn) {
           if (f.arity !== undefined && args.length !== f.arity) throw new PyError('TypeError', e.name + '() takes ' + f.arity + ' arguments but ' + args.length + ' were given. Robot commands are written with empty brackets: ' + e.name + '()', e.line);
           var r = f.fn(args, kw, e.line);
+          // The pause. A command marked step, such as move(), hands the
+          // page the line it is on and stops here until the page asks
+          // for the next step.
           if (f.step) yield { line: e.line, name: e.name };
           return r;
         }
@@ -668,8 +816,13 @@ var MiniPy = (function () {
     throw new PyError('RuntimeError', 'unknown expression', e.line);
   };
 
+  // Read a program without running it: null if the tokenizer and the
+  // parser find no mistake, or the PyError if they do.
   function check(src) { try { new Parser(tokenize(src)).program(); return null; } catch (e) { return e; } }
 
+  // Only these six names can be used from outside this file.
   return { Runner: Runner, PyError: PyError, PyFloat: PyFloat, tokenize: tokenize, check: check, repr: repr };
 })();
+// In the browser there is no "module", so this line does nothing.
+// In Node it hands MiniPy to the tests.
 if (typeof module !== 'undefined') module.exports = MiniPy;
