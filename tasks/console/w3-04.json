@@ -1,0 +1,52 @@
+{
+  "id": "console-w3-04",
+  "week": 3,
+  "type": "console",
+  "title": "Add two numbers",
+  "brief": "Programs become interesting when they react to the person using them. The input function shows a message, waits for the user to type something and press Enter, and then gives that text back to the program so you can store it in a variable.\n\nThere is a catch. Whatever the user types is a string, even if they typed `9`. The string `\"9\"` is not the same as the integer `9`, and adding two strings joins them together: `\"9\" + \"17\"` is `\"917\"`. To do arithmetic you must first convert the text with `int()`. Going the other way, when you want to print a number inside a sentence you convert it back with `str()`.\n\nWrite the program from the lecture: print a welcome line, ask for two numbers, add them and print the total as a sentence. The test types in 9 and 17, and the program must produce `The total is 26.`",
+  "vocabulary": [
+    {
+      "term": "input",
+      "gloss": "the `input()` function shows a message, waits for the user to type something, and gives that text back to the program."
+    },
+    {
+      "term": "convert",
+      "gloss": "change a value from one type to another, for example `int(\"9\")` turns the string `\"9\"` into the integer `9`."
+    },
+    {
+      "term": "integer",
+      "gloss": "a whole number with no decimal point, such as `7` or `-2`. In Python this type is called `int`."
+    },
+    {
+      "term": "string",
+      "gloss": "a piece of text, written between quotes: `\"hello\"` or `'10'`."
+    },
+    {
+      "term": "concatenate",
+      "gloss": "join strings together with `+`: `\"hi\" + \" \" + \"there\"`."
+    }
+  ],
+  "starterCode": "\"\"\"\nFile: add2numbers.py\n--------------------\nAsk the user for two numbers and print their total.\n\"\"\"\n\n\ndef main():\n    print(\"This program adds two numbers.\")\n    num1 = input(\"Enter first number: \")\n    # convert num1 to an int\n    # ask for the second number and convert it too\n    # add them together and print the total\n\n\nif __name__ == '__main__':\n    main()\n",
+  "tests": [
+    {
+      "stdin": [
+        "9",
+        "17"
+      ],
+      "expectedStdout": "This program adds two numbers.\nEnter first number: 9\nEnter second number: 17\nThe total is 26.\n"
+    },
+    {
+      "stdin": [
+        "100",
+        "-1"
+      ],
+      "expectedStdout": "This program adds two numbers.\nEnter first number: 100\nEnter second number: -1\nThe total is 99.\n"
+    }
+  ],
+  "hints": [
+    "`num1 = int(num1)` creates an integer version and stores it back in the same variable.",
+    "`print(\"The total is \" + str(total) + \".\")`"
+  ],
+  "reflect": "Why does the program need int() and str()? What would happen if you removed the int() lines - try it and describe the result.",
+    "solution": "\"\"\"\nFile: add2numbers.py\n--------------------\nAsk the user for two numbers and print their total.\n\"\"\"\n\n\ndef main():\n    print(\"This program adds two numbers.\")\n    num1 = input(\"Enter first number: \")\n    num1 = int(num1)\n    num2 = input(\"Enter second number: \")\n    num2 = int(num2)\n    total = num1 + num2\n    print(\"The total is \" + str(total) + \".\")\n\n\nif __name__ == '__main__':\n    main()\n"
+}

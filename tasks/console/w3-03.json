@@ -1,0 +1,52 @@
+{
+  "id": "console-w3-03",
+  "week": 3,
+  "type": "console",
+  "title": "Absent students",
+  "brief": "A variable is a place to store information in a program: it gives a name to a value. You create a variable by assigning a value to it with the equals sign: `num_students = 700`. The name should be descriptive and written in snake case - lowercase words joined by underscores.\n\nAssignment is not the same as “equals” in maths. Python first works out whatever is on the right-hand side and then stores the result in the variable on the left. That is why `total = total + 1` makes sense in a program: it takes the current value, adds one, and stores the new value back.\n\nA lecture has 700 registered students, and 550 are in the room. Store both numbers in well-named variables, calculate how many are absent in a third variable, and print `150 students are absent.` Then imagine 3 more students arrive late: increase the number in the room by 3, recalculate, and print the line again. Do not type the answers directly - let Python calculate them.",
+  "vocabulary": [
+    {
+      "term": "variable",
+      "gloss": "a named place to store information in a program. It associates a name with a value."
+    },
+    {
+      "term": "assignment",
+      "gloss": "giving a variable a value with the `=` sign. Python first works out the right-hand side, then stores the result in the variable on the left."
+    },
+    {
+      "term": "snake case",
+      "gloss": "the naming style used in Python: lowercase words joined with underscores, e.g. `num_students`."
+    },
+    {
+      "term": "integer",
+      "gloss": "a whole number with no decimal point, such as `7` or `-2`. In Python this type is called `int`."
+    },
+    {
+      "term": "concatenate",
+      "gloss": "join strings together with `+`: `\"hi\" + \" \" + \"there\"`."
+    }
+  ],
+  "starterCode": "\"\"\"\nFile: absent.py\n---------------\nUse variables to count absent students.\n\"\"\"\n\n\ndef main():\n    num_students = 700\n    # create num_in_class and num_absent here\n\n\nif __name__ == '__main__':\n    main()\n",
+  "tests": [
+    {
+      "stdin": [],
+      "expectedStdout": "150 students are absent.\n147 students are absent.\n"
+    }
+  ],
+  "requires": [
+    {
+      "pattern": "\\bnum_absent\\s*=",
+      "message": "Store the result in a variable called `num_absent`."
+    },
+    {
+      "pattern": "num_in_class\\s*=\\s*num_in_class\\s*\\+\\s*3|num_in_class\\s*\\+=\\s*3",
+      "message": "Update the variable with `num_in_class = num_in_class + 3` rather than typing a new number."
+    }
+  ],
+  "hints": [
+    "`num_absent = num_students - num_in_class`",
+    "A number cannot be joined to a string with `+`. Convert it first: `print(str(num_absent) + \" students are absent.\")`, or use a comma: `print(num_absent, \"students are absent.\")`"
+  ],
+  "reflect": "Explain the line num_in_class = num_in_class + 3. Why would this make no sense in maths but does make sense in Python?",
+    "solution": "\"\"\"\nFile: absent.py\n---------------\nUse variables to count absent students.\n\"\"\"\n\n\ndef main():\n    num_students = 700\n    num_in_class = 550\n    num_absent = num_students - num_in_class\n    print(str(num_absent) + \" students are absent.\")\n    num_in_class = num_in_class + 3\n    num_absent = num_students - num_in_class\n    print(str(num_absent) + \" students are absent.\")\n\n\nif __name__ == '__main__':\n    main()\n"
+}

@@ -1,0 +1,58 @@
+{
+  "id": "console-w3-05",
+  "week": 3,
+  "type": "console",
+  "title": "Average of two",
+  "brief": "Python stores every value with a type. Whole numbers are `int`; numbers with a decimal point are `float`. The type decides how the value behaves: `7 // 2` (whole-number division) gives the int `3`, while `7 / 2` gives the float `3.5`. Even when a division comes out exactly, the result is still a float, so `26 / 2` is `13.0`, not `13`.\n\nExtend the adding program. After printing the total, also calculate the average of the two numbers with `/` and print it. Notice how Python displays the average - the `.0` at the end tells you it is a float.\n\nYou can print a number on its own without `str()`, or you can print several items separated by commas and Python puts a space between them: `print(\"The average is\", average)`.",
+  "vocabulary": [
+    {
+      "term": "type",
+      "gloss": "the kind of information stored in a variable: `int`, `float`, `str` or `bool`."
+    },
+    {
+      "term": "integer",
+      "gloss": "a whole number with no decimal point, such as `7` or `-2`. In Python this type is called `int`."
+    },
+    {
+      "term": "float",
+      "gloss": "a real number with a decimal point, such as `3.5` or `700.0`."
+    },
+    {
+      "term": "variable",
+      "gloss": "a named place to store information in a program. It associates a name with a value."
+    },
+    {
+      "term": "print",
+      "gloss": "the `print()` function writes text to the terminal (the screen)."
+    }
+  ],
+  "starterCode": "\"\"\"\nFile: average.py\n----------------\nAsk for two numbers, then print their total and their average.\n\"\"\"\n\n\ndef main():\n    print(\"This program finds the average of two numbers.\")\n    num1 = int(input(\"Enter first number: \"))\n    num2 = int(input(\"Enter second number: \"))\n    total = num1 + num2\n    print(\"The total is\", total)\n    # calculate and print the average\n\n\nif __name__ == '__main__':\n    main()\n",
+  "tests": [
+    {
+      "stdin": [
+        "9",
+        "17"
+      ],
+      "expectedStdout": "This program finds the average of two numbers.\nEnter first number: 9\nEnter second number: 17\nThe total is 26\nThe average is 13.0\n"
+    },
+    {
+      "stdin": [
+        "3",
+        "4"
+      ],
+      "expectedStdout": "This program finds the average of two numbers.\nEnter first number: 3\nEnter second number: 4\nThe total is 7\nThe average is 3.5\n"
+    }
+  ],
+  "requires": [
+    {
+      "pattern": "\\baverage\\s*=",
+      "message": "Store the result in a variable called `average`."
+    }
+  ],
+  "hints": [
+    "`average = total / 2`",
+    "Look at the starter code: `int(input(...))` does two steps in one line - it asks for input and converts it straight away."
+  ],
+  "reflect": "What is the difference between an int and a float? Give an example of a real-world quantity for each, as in the lecture.",
+    "solution": "\"\"\"\nFile: average.py\n----------------\nAsk for two numbers, then print their total and their average.\n\"\"\"\n\n\ndef main():\n    print(\"This program finds the average of two numbers.\")\n    num1 = int(input(\"Enter first number: \"))\n    num2 = int(input(\"Enter second number: \"))\n    total = num1 + num2\n    print(\"The total is\", total)\n    average = total / 2\n    print(\"The average is\", average)\n\n\nif __name__ == '__main__':\n    main()\n"
+}

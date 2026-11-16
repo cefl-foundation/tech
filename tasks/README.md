@@ -14,8 +14,9 @@ tasks/
 
 The robot and AI tasks get folders of their own when they move in.
 
-`tests/tasks.test.js` checks that the index and the files agree. Run it
-from the repository folder with `node --test`.
+`tests/tasks.test.js` checks that the index and the files agree, and
+`tests/python-solutions.test.js` checks the Python tasks themselves. Run
+both from the repository folder with `node --test`.
 
 ## index.json
 
@@ -66,6 +67,71 @@ backticks is shown as code:
 
 Anyone can read these files on GitHub, solutions included, so put nothing
 secret in them.
+
+## `console`
+
+A Python program that prints text and can ask the user to type. It runs in
+MiniPy, the site's own small Python (`js/python/minipy.js`), and it is
+judged by what it prints. Console tasks open on `practice-python.html`.
+
+```json
+{
+  "id": "console-w3-04",
+  "week": 3,
+  "type": "console",
+  "title": "Add two numbers",
+  "brief": "…",
+  "vocabulary": [{ "term": "convert", "gloss": "…" }],
+  "starterCode": "\"\"\"\nFile: add2numbers.py\n…\n\"\"\"\n\n\ndef main():\n    pass\n\n\nif __name__ == '__main__':\n    main()\n",
+  "tests": [
+    { "stdin": ["9", "17"], "expectedStdout": "Enter first number: 9\nEnter second number: 17\nThe total is 26.\n" }
+  ],
+  "requires": [
+    { "pattern": "\\bint\\s*\\(", "message": "Convert the text with `int()`." }
+  ],
+  "hints": ["…", "…"],
+  "reflect": "Why does the program need int() and str()?",
+  "solution": "…"
+}
+```
+
+`id`, `week`, `type`, `title`, `brief`, `vocabulary` and `hints` are as
+for a web task. A console task has no `concepts`: the one line under its
+title comes from `concept` in the index.
+
+| field | meaning |
+|---|---|
+| `starterCode` | what is in the code box when the task opens. Write `\n` for each new line, and end with one. The code box locks everything above the first `def` and everything from the `if __name__` line down (`js/python/editor-lock.js`). A line `File: name.py` in the docstring gives the name shown on the code box |
+| `tests` | see below. Every test must pass for the task to be complete |
+| `requires` | (optional) what the code itself must contain, such as a `for` loop. `pattern` is a regular expression, kept as text because JSON cannot hold a pattern: write every `\` twice. `message` is shown when the output is right but the code does not match the pattern |
+| `reflect` | the reflection question for the task. The task page does not show it yet |
+| `solution` | a correct program: the whole file, starter lines included |
+
+### Tests
+
+Each test runs the student's whole program once. `stdin` is the list of
+answers that `input()` gets, in order. `expectedStdout` is everything the
+terminal shows: what the program prints and, after each prompt, the
+answer that was typed. `name` (optional) is shown to the student beside
+the test's number.
+
+`match` (optional) chooses how the output is compared with
+`expectedStdout`:
+
+| `match` | passes when |
+|---|---|
+| left out | the two are the same once spaces at the end of a line and blank lines at the end are ignored. Use this unless you need another rule |
+| `exact` | the output is exactly `expectedStdout`, character for character |
+| `trimmed` | the same once spaces and blank lines at both ends are ignored |
+| `contains` | `expectedStdout` appears anywhere in the output |
+| `regex` | the output matches `expectedStdout` as a JavaScript regular expression with the `m` flag, so `^` and `$` match the start and end of any line |
+
+When a test with no `match` fails, the student sees the expected output
+beside their own, and one sentence about the first difference.
+
+`tests/python-solutions.test.js` checks three things for every console
+task: the solution passes, the starter code does not, and the solution
+prints the same in real Python as in MiniPy.
 
 ## `html-editor`
 

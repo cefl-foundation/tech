@@ -10,6 +10,41 @@
           "file": "console/w3-01.json",
           "title": "Hello, world",
           "concept": "The print function"
+        }, 
+                {
+          "id": "console-w3-02",
+          "type": "console",
+          "file": "console/w3-02.json",
+          "title": "Quotes inside quotes",
+          "concept": "Single and double quotes"
+        },
+        {
+          "id": "console-w3-03",
+          "type": "console",
+          "file": "console/w3-03.json",
+          "title": "Absent students",
+          "concept": "Variables and assignment"
+        },
+        {
+          "id": "console-w3-04",
+          "type": "console",
+          "file": "console/w3-04.json",
+          "title": "Add two numbers",
+          "concept": "input, int and str"
+        },
+        {
+          "id": "console-w3-05",
+          "type": "console",
+          "file": "console/w3-05.json",
+          "title": "Average of two",
+          "concept": "int and float"
+        },
+        {
+          "id": "console-w3-06",
+          "type": "console",
+          "file": "console/w3-06.json",
+          "title": "Next year",
+          "concept": "Putting the basics together"
         }
       ]
     },
