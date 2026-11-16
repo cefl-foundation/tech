@@ -194,6 +194,10 @@ input, select, textarea { font: inherit; }
   font-size: 15px;
 }
 
+/* A hint can hold several paragraphs and a code sample. */
+.brief .hint > * { margin: 0 0 8px; }
+.brief .hint > :last-child { margin-bottom: 0; }
+
 /* ---------- the task itself ---------- */
 /* The stage: a box across the page, above the two columns. It is hidden
    until a task type asks for it with Shell.stage(). */
