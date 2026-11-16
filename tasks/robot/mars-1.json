@@ -1,0 +1,48 @@
+{
+  "id": "mars-1",
+  "week": 2,
+  "type": "robot",
+  "world": "mars",
+  "title": "First drive",
+  "concepts": ["Calling functions"],
+  "brief": "The rover has just woken up on the surface of Mars. It is standing on the left-hand square of the top row, facing east. Three squares ahead of it, mission control has spotted an interesting rock sample.\n\nWrite a program that drives the rover east until it reaches the rock, and then collects the rock. The rover understands only four commands: `move()`, `turn_left()`, `pick_rock()` and `put_rock()`. Each command is a function call - the name of the function followed by a pair of parentheses.\n\nAll of your commands must go inside the main function, and every line inside `main()` must be indented by four spaces. The last two lines of the file start the program - leave them exactly as they are.",
+  "vocabulary": [
+    {
+      "term": "function",
+      "gloss": "a self-contained block of code that performs one specific task. You define it once and can call it many times."
+    },
+    {
+      "term": "call a function",
+      "gloss": "tell the computer to run (execute) that set of actions, by writing the name followed by brackets: `name()`."
+    },
+    {
+      "term": "main function",
+      "gloss": "the function where the program starts. It usually controls the program by calling other functions."
+    },
+    {
+      "term": "parenthesis",
+      "gloss": "a round bracket `( )`. A function is always called with a pair of them, even when it needs no information: `move()`."
+    },
+    {
+      "term": "indentation",
+      "gloss": "the spaces at the beginning of a line of code. In Python, indentation shows which lines belong inside a function, a loop or an if-statement."
+    }
+  ],
+  "starterCode": "from rover.marsrover import *\n\n# File: first_drive.py\n# --------------------\n# Drive the rover to the rock sample and collect it.\n\ndef main():\n    pass  # replace this line with your commands\n\n\nif __name__ == '__main__':\n    main()\n",
+  "map": {
+    "cols": 6,
+    "rows": 3,
+    "robot": { "x": 1, "y": 3, "dir": "E" },
+    "items": { "4,3": 1 }
+  },
+  "goal": {
+    "items": {},
+    "robot": { "x": 4, "y": 3 }
+  },
+  "hints": [
+    "One `move()` moves the rover exactly one square in the direction it is facing.",
+    "The rock is three squares away, so you need three `move()` calls before `pick_rock()`."
+  ],
+  "reflect": "What does it mean to call a function? Explain it in your own words, using one of the rover commands as an example.",
+  "solution": ""
+}

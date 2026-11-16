@@ -35,7 +35,7 @@ const Tasks = (function () {
     const list = [];
     for (const week of index.weeks || []) {
       for (const entry of week.tasks || []) {
-        list.push({ id: entry.id, type: entry.type, file: entry.file, title: entry.title, concept: entry.concept, week: week.week });
+                list.push({ id: entry.id, type: entry.type, world: entry.world, file: entry.file, title: entry.title, concept: entry.concept, week: week.week });
       }
     }
     return list;
