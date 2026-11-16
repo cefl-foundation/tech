@@ -65,6 +65,12 @@ const Tasks = (function () {
     });
   }
 
-  // Only these four names can be seen from outside this file.
-  return { loadIndex: loadIndex, flatList: flatList, neighbours: neighbours, loadTask: loadTask };
+  // The questions of the quick vocabulary practice. A page asks for them
+  // once, so no copy is kept.
+  function loadQuiz() {
+    return fetchJson(TASKS_BASE + "quiz.json");
+  }
+
+  // Only these five names can be seen from outside this file.
+  return { loadIndex: loadIndex, flatList: flatList, neighbours: neighbours, loadTask: loadTask, loadQuiz: loadQuiz };
 })();
