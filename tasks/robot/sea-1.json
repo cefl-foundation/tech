@@ -1,0 +1,51 @@
+{
+  "id": "sea-1",
+  "week": 2,
+  "type": "robot",
+  "world": "ocean",
+  "title": "Swim to the reef",
+  "concepts": ["while with a sensor"],
+  "brief": "The drone is at the left end of the bay, facing east. Somewhere ahead there is a wall of reef, but the drone does not know how far away it is - the maps of this bay are out of date. So counting moves with a for loop is not an option.\n\nInstead, use a while loop with a sensor. The drone can ask `front_is_clear()`, which returns `True` when nothing blocks the square ahead. As long as that condition is true, the drone should keep moving. The moment it becomes false, the loop stops and the drone is safely next to the reef.\n\nWrite this as a helper function `move_to_reef()` and call it from `main()`.",
+  "vocabulary": [
+    {
+      "term": "while loop",
+      "gloss": "a loop that keeps repeating as long as a condition is true: `while front_is_clear():`"
+    },
+    {
+      "term": "condition",
+      "gloss": "a test that is either `True` or `False`, for example `front_is_clear()`."
+    },
+    {
+      "term": "indefinite loop",
+      "gloss": "a loop where you do not know how many times it will run - it stops when a condition changes (a while loop)."
+    },
+    {
+      "term": "boolean",
+      "gloss": "a value that is either `True` or `False`. In Python this type is called `bool`."
+    }
+  ],
+  "starterCode": "from ocean.drone import *\n\n# File: to_the_reef.py\n# --------------------\n# Swim east until the drone reaches the reef.\n\n\ndef move_to_reef():\n    pass\n\n\ndef main():\n    move_to_reef()\n\n\nif __name__ == '__main__':\n    main()\n",
+  "map": {
+    "cols": 8,
+    "rows": 3,
+    "robot": { "x": 1, "y": 2, "dir": "E" },
+    "items": {},
+    "walls": [[5, 2, "E"], [5, 1, "E"], [5, 3, "E"]]
+  },
+  "goal": {
+    "items": {},
+    "robot": { "x": 5, "y": 2 }
+  },
+  "requires": [
+    {
+      "pattern": "\\bwhile\\b",
+      "message": "Use a while loop with front_is_clear() - the drone does not know the distance."
+    }
+  ],
+  "hints": [
+    "```\nwhile front_is_clear():\n    move()\n```",
+    "If the drone crashes into the reef, check that the `move()` is inside the loop, not after it."
+  ],
+  "reflect": "When is a while loop a better choice than a for loop? Use the words “definite” and “indefinite” in your answer.",
+  "solution": "from ocean.drone import *\n\n# File: to_the_reef.py\n# --------------------\n# Swim east until the drone reaches the reef.\n\n\ndef move_to_reef():\n    while front_is_clear():\n        move()\n\n\ndef main():\n    move_to_reef()\n\n\nif __name__ == '__main__':\n    main()\n"
+}

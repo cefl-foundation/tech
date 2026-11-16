@@ -1,0 +1,54 @@
+{
+  "id": "sea-3",
+  "week": 2,
+  "type": "robot",
+  "world": "ocean",
+  "title": "Only where needed",
+  "concepts": ["The if-statement"],
+  "brief": "Now the whole lane needs cleaning. The drone must swim from the left end of the lane to the right end and pick up every bottle it finds on the way. Some squares have a bottle, some do not, and the drone must not try to pick up a bottle from an empty square - that causes an error.\n\nThis calls for an if-statement: a decision inside the loop. On every square, check the condition `bottle_present()`; only if it is true, call `pick_bottle()`. Then move on. The block under `if` is indented one level deeper than the `while` body, so this program has two levels of indentation.\n\nWatch out for the fence post: the last square of the lane also needs to be checked.",
+  "vocabulary": [
+    {
+      "term": "if-statement",
+      "gloss": "a decision: the indented block runs only if the condition is true."
+    },
+    {
+      "term": "condition",
+      "gloss": "a test that is either `True` or `False`, for example `front_is_clear()`."
+    },
+    {
+      "term": "fence post problem",
+      "gloss": "also called an off-by-one error: a loop that repeats one time too many or one time too few, like counting fence posts and fence rails."
+    },
+    {
+      "term": "code block",
+      "gloss": "a group of indented lines that belong together, for example the body of a function."
+    }
+  ],
+  "starterCode": "from ocean.drone import *\n\n# File: clean_lane.py\n# -------------------\n# Swim to the end of the lane and pick up every bottle on the way.\n\n\ndef main():\n    pass\n\n\nif __name__ == '__main__':\n    main()\n",
+  "map": {
+    "cols": 8,
+    "rows": 1,
+    "robot": { "x": 1, "y": 1, "dir": "E" },
+    "items": { "2,1": 1, "4,1": 1, "5,1": 1, "8,1": 1 }
+  },
+  "goal": {
+    "items": {},
+    "robot": { "x": 8, "y": 1 }
+  },
+  "requires": [
+    {
+      "pattern": "\\bif\\b",
+      "message": "Use an if-statement to decide whether to pick up a bottle."
+    },
+    {
+      "pattern": "\\bwhile\\b",
+      "message": "Use a while loop to reach the end of the lane."
+    }
+  ],
+  "hints": [
+    "Write a helper `clean_square()` containing the if-statement, and call it inside the loop and once more after it.",
+    "```\nwhile front_is_clear():\n    if bottle_present():\n        pick_bottle()\n    move()\nif bottle_present():\n    pick_bottle()\n```"
+  ],
+  "reflect": "Paraphrase this definition: “The if-statement is a decision-making statement that guides a program to make decisions based on specified criteria.”",
+  "solution": "from ocean.drone import *\n\n# File: clean_lane.py\n# -------------------\n# Swim to the end of the lane and pick up every bottle on the way.\n\n\ndef clean_square():\n    if bottle_present():\n        pick_bottle()\n\n\ndef main():\n    while front_is_clear():\n        clean_square()\n        move()\n    clean_square()\n\n\nif __name__ == '__main__':\n    main()\n"
+}

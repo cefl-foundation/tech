@@ -1,0 +1,50 @@
+{
+  "id": "sea-2",
+  "week": 2,
+  "type": "robot",
+  "world": "ocean",
+  "title": "Find the bottle",
+  "concepts": ["Negative conditions"],
+  "brief": "A single plastic bottle is floating somewhere along the bottom row of the bay. The drone starts at the left end, facing east, and does not know which square the bottle is on.\n\nThe drone has a sensor called `bottle_present()`, which is true when there is a bottle on the drone’s own square, and the opposite sensor `no_bottle_present()`. Keep moving while there is no bottle here; when the loop ends, the drone must be on the bottle’s square, so pick it up.\n\nTry to write the condition so that the program reads like a sentence in English.",
+  "vocabulary": [
+    {
+      "term": "condition",
+      "gloss": "a test that is either `True` or `False`, for example `front_is_clear()`."
+    },
+    {
+      "term": "while loop",
+      "gloss": "a loop that keeps repeating as long as a condition is true: `while front_is_clear():`"
+    },
+    {
+      "term": "boolean",
+      "gloss": "a value that is either `True` or `False`. In Python this type is called `bool`."
+    },
+    {
+      "term": "iterate",
+      "gloss": "to repeat a process. One repetition is called an iteration."
+    }
+  ],
+  "starterCode": "from ocean.drone import *\n\n# File: find_bottle.py\n# --------------------\n# Swim east until the drone is on the bottle, then pick it up.\n\n\ndef main():\n    pass\n\n\nif __name__ == '__main__':\n    main()\n",
+  "map": {
+    "cols": 8,
+    "rows": 2,
+    "robot": { "x": 1, "y": 1, "dir": "E" },
+    "items": { "6,1": 1 }
+  },
+  "goal": {
+    "items": {},
+    "robot": { "x": 6, "y": 1 }
+  },
+  "requires": [
+    {
+      "pattern": "\\bwhile\\b",
+      "message": "Use a while loop - the distance to the bottle is unknown."
+    }
+  ],
+  "hints": [
+    "```\nwhile no_bottle_present():\n    move()\npick_bottle()\n```",
+    "The `pick_bottle()` goes after the loop, because the loop ends exactly when the drone reaches the bottle."
+  ],
+  "reflect": "Read your while line aloud as an English sentence. Why is the pick_bottle() call outside the loop?",
+  "solution": "from ocean.drone import *\n\n# File: find_bottle.py\n# --------------------\n# Swim east until the drone is on the bottle, then pick it up.\n\n\ndef main():\n    while no_bottle_present():\n        move()\n    pick_bottle()\n\n\nif __name__ == '__main__':\n    main()\n"
+}
