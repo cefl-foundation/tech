@@ -576,6 +576,17 @@ var MiniPy = (function () {
   // deals with it: a loop for break and continue, a call for return.
   function Signal(type, value) { this.type = type; this.value = value; }
 
+  // How many of the student's own functions may be running at the same
+  // time, one inside the other. A function that calls itself and never
+  // stops gets there in a moment. Real Python allows 1,000. MiniPy
+  // allows fewer, because each call of a student's function is many
+  // calls of JavaScript underneath, and the browser has a limit of its
+  // own for those. The browser's message has no line number and no
+  // advice, so MiniPy has to stop the program first. In Chrome a plain
+  // function fits about 1,000 deep, but one whose call sits inside two
+  // loops and an if fits only about 260.
+  var MAX_CALL_DEPTH = 100;
+
   // A Runner is one run of one program: a new one is made every time a
   // program is run. opts can hold four things:
   //   inputs    what the user types: one piece of text for each input()
@@ -591,11 +602,14 @@ var MiniPy = (function () {
     //             program. __name__ is put there at the start, so that
     //             if __name__ == '__main__':  is true
     // stepCount   how many steps the program has taken: see tick()
+    // callDepth   how many of the student's own functions are running
+    //             now, one inside the other: see MAX_CALL_DEPTH
     this.out = '';
     this.inputs = (opts.inputs || []).slice();
     this.builtins = {};
     this.globals = { '__name__': '__main__' };
     this.stepCount = 0;
+    this.callDepth = 0;
     this.maxSteps = opts.maxSteps || 20000;
     this.onPrint = opts.onPrint || null;
     var self = this;
@@ -683,22 +697,19 @@ var MiniPy = (function () {
   //
   // yield* means: run that other generator here, and pass on its pauses.
   Runner.prototype.run = function* () {
-    var self = this;
     // define all functions first (hoisting like Python does when executed top-down is not exact, but this
     // lets `if __name__ == '__main__': main()` appear anywhere and mirrors what students see in class)
     for (var i = 0; i < this.ast.length; i++) {
       var s = this.ast[i];
       if (s.k === 'def') this.globals[s.name] = { fn: null, name: s.name, def: s };
     }
-    var calledMain = false;
 
     // Then run the other lines of the top level, from top to bottom.
     // Their variables live in globals.
     for (var j = 0; j < this.ast.length; j++) {
       var st = this.ast[j];
       if (st.k === 'def') continue;
-      if (st.k === 'if' && !calledMain) calledMain = true;
-      var sig = yield* this.execStmt(st, this.globals, true);
+      var sig = yield* this.execStmt(st, this.globals);
       if (sig && sig.type === 'return') break;
     }
     return this.out;
@@ -716,7 +727,7 @@ var MiniPy = (function () {
 
   // Run one statement. env is where its variables live: globals at the
   // top level, or the variables of the function that is running.
-  Runner.prototype.execStmt = function* (s, env, top) {
+  Runner.prototype.execStmt = function* (s, env) {
     this.tick(s.line);
     switch (s.k) {
       // pass does nothing.
@@ -846,6 +857,15 @@ var MiniPy = (function () {
           var local = {};
           for (var p = 0; p < f.def.params.length; p++) local[f.def.params[p]] = args[p];
           this.tick(e.line);
+          this.tick(e.line);
+          // One more function is running. With more than MAX_CALL_DEPTH
+          // of them, a function is almost certainly calling itself for
+          // ever: stop here, where the line of the call is known.
+          if (++this.callDepth > MAX_CALL_DEPTH) throw new PyError('RecursionError', 'the program has more than ' + MAX_CALL_DEPTH + ' function calls inside each other and was stopped. This usually means a function calls itself and never stops - check the lines inside your function ' + e.name + '().', e.line);
+          var sig = yield* this.execBlock(f.def.body, local);
+          // The function has finished: one fewer is running.
+          this.callDepth--;
+          return sig && sig.type === 'return' ? sig.value : null;
           var sig = yield* this.execBlock(f.def.body, local);
           return sig && sig.type === 'return' ? sig.value : null;
         }
