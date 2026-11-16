@@ -1,0 +1,34 @@
+{
+  "id": "console-w3-02",
+  "week": 3,
+  "type": "console",
+  "title": "Quotes inside quotes",
+  "brief": "A string can be written between double quotes `\"like this\"` or single quotes `'like this'`. Usually it does not matter which you choose. It matters when the text itself contains a quote mark.\n\nIf your text contains an apostrophe, such as didn't, wrap the string in double quotes. If your text contains double quotes, such as say \"hi\", wrap the string in single quotes. Otherwise Python thinks the string ends early and you get a SyntaxError.\n\nPrint these two lines exactly: first `no, you didn't` and then `say \"hi\" to the rover`.",
+  "vocabulary": [
+    {
+      "term": "string",
+      "gloss": "a piece of text, written between quotes: `\"hello\"` or `'10'`."
+    },
+    {
+      "term": "print",
+      "gloss": "the `print()` function writes text to the terminal (the screen)."
+    },
+    {
+      "term": "source code",
+      "gloss": "the text of a program, written by a programmer."
+    }
+  ],
+  "starterCode": "\"\"\"\nFile: quotes.py\n---------------\nPrinting text that contains quote marks.\n\"\"\"\n\n\ndef main():\n    pass\n\n\nif __name__ == '__main__':\n    main()\n",
+  "tests": [
+    {
+      "stdin": [],
+      "expectedStdout": "no, you didn't\nsay \"hi\" to the rover\n"
+    }
+  ],
+  "hints": [
+    "`print(\"no, you didn't\")`",
+    "`print('say \"hi\" to the rover')`"
+  ],
+  "reflect": "When do you use single quotes and when double quotes? Give one example of each.",
+    "solution": "\"\"\"\nFile: quotes.py\n---------------\nPrinting text that contains quote marks.\n\"\"\"\n\n\ndef main():\n    print(\"no, you didn't\")\n    print('say \"hi\" to the rover')\n\n\nif __name__ == '__main__':\n    main()\n"
+}

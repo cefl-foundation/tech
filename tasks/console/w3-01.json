@@ -34,5 +34,5 @@
     "The text must be inside quotes, and the whole thing inside the parentheses of `print( )`."
   ],
   "reflect": "What does the print function do? What happens if you forget the quotes around the text?",
-  "solution": ""
+    "solution": "\"\"\"\nFile: helloworld.py\n-------------------\nThis is our first Python program.\n\"\"\"\n\n\ndef main():\n    print(\"hello, world!\")\n\n\n# This provided line is required at the end of a Python\n# file to call the main() function.\nif __name__ == '__main__':\n    main()\n"
 }

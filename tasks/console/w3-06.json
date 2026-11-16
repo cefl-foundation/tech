@@ -1,0 +1,52 @@
+{
+  "id": "console-w3-06",
+  "week": 3,
+  "type": "console",
+  "title": "Next year",
+  "brief": "Write a small conversation. The program asks for the user’s name, then asks for their age. It then greets the user by name and tells them how old they will be next year.\n\nYou will need everything from this week: `input()` to read the answers, `int()` to convert the age so that you can add one to it, and either `str()` with `+` or commas inside `print()` to build the sentence. Choose descriptive variable names.\n\nFor the name Ada and the age 20, the last line must be exactly `Hello, Ada. Next year you will be 21.` Check the spaces and the full stops carefully.",
+  "vocabulary": [
+    {
+      "term": "input",
+      "gloss": "the `input()` function shows a message, waits for the user to type something, and gives that text back to the program."
+    },
+    {
+      "term": "convert",
+      "gloss": "change a value from one type to another, for example `int(\"9\")` turns the string `\"9\"` into the integer `9`."
+    },
+    {
+      "term": "concatenate",
+      "gloss": "join strings together with `+`: `\"hi\" + \" \" + \"there\"`."
+    },
+    {
+      "term": "variable",
+      "gloss": "a named place to store information in a program. It associates a name with a value."
+    },
+    {
+      "term": "string",
+      "gloss": "a piece of text, written between quotes: `\"hello\"` or `'10'`."
+    }
+  ],
+  "starterCode": "\"\"\"\nFile: next_year.py\n------------------\nAsk for a name and an age, then say how old the user will be next year.\n\"\"\"\n\n\ndef main():\n    pass\n\n\nif __name__ == '__main__':\n    main()\n",
+  "tests": [
+    {
+      "stdin": [
+        "Ada",
+        "20"
+      ],
+      "expectedStdout": "What is your name? Ada\nHow old are you? 20\nHello, Ada. Next year you will be 21.\n"
+    },
+    {
+      "stdin": [
+        "Sami",
+        "34"
+      ],
+      "expectedStdout": "What is your name? Sami\nHow old are you? 34\nHello, Sami. Next year you will be 35.\n"
+    }
+  ],
+  "hints": [
+    "The prompts must match exactly: `input(\"What is your name? \")` and `input(\"How old are you? \")` - note the space after the question mark.",
+    "`print(\"Hello, \" + name + \". Next year you will be \" + str(age + 1) + \".\")`"
+  ],
+  "reflect": "List the types of every variable in your program (str, int or float). Where did a conversion happen, and why was it needed?",
+    "solution": "\"\"\"\nFile: next_year.py\n------------------\nAsk for a name and an age, then say how old the user will be next year.\n\"\"\"\n\n\ndef main():\n    name = input(\"What is your name? \")\n    age = int(input(\"How old are you? \"))\n    print(\"Hello, \" + name + \". Next year you will be \" + str(age + 1) + \".\")\n\n\nif __name__ == '__main__':\n    main()\n"
+}
