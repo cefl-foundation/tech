@@ -9,11 +9,12 @@ file, add a line to the index, done.
 tasks/
   index.json    the list of tasks, grouped by week (order matters)
   console/      type "console": Python programs that print text, week 3
+  robot/        type "robot": Python programs that drive a robot, week 2
   web/          types "html-editor", "inspect" and "walkthrough", weeks 6 and 7
   quiz.json     the questions of the quick vocabulary practice
 ```
 
-The robot and AI tasks get folders of their own when they move in.
+The AI tasks get a folder of their own when they move in.
 
 `tests/tasks.test.js` checks that the index and the files agree, and
 `tests/python-solutions.test.js` checks the Python tasks themselves. Run
@@ -47,6 +48,11 @@ files, while a Mac finds either. `title` is repeated here so the task list
 can be drawn without fetching every task file; it must be the same as the
 title in the task's own file. `concept` is one short line shown under the
 title in the task list.
+
+A robot task has one more key here, `"world"`: `"mars"`, `"warehouse"` or
+`"ocean"`. The robot tasks share one type, so the task list reads `world`
+to put each task in its group. It must be the same as `world` in the
+task's own file.
 
 ## quiz.json
 

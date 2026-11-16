@@ -21,9 +21,10 @@ const Shell = (function () {
     return Boolean(saved) && saved.status === "passed";
   }
 
-  // The strand a task belongs to: the one with the same task type.
+    // The strand a task belongs to: the one with the same task type and,
+  // if the strand names a world, the same world.
   function strandFor(entry) {
-    return settings.strands.find((strand) => strand.type === entry.type);
+    return settings.strands.find((strand) => strand.type === entry.type && (!strand.world || strand.world === entry.world));
   }
 
   // A task is in round two when its strand's roundTwo list names it.
@@ -123,9 +124,9 @@ const Shell = (function () {
     settings = pageSettings;
     Tasks.loadIndex()
       .then(function (index) {
-        // Keep this page's task types only, in the order of the index.
-        const types = settings.strands.map((strand) => strand.type);
-        list = Tasks.flatList(index).filter((entry) => types.includes(entry.type));
+               // Keep the tasks that belong to one of this page's strands, in the
+        // order of the index.
+        list = Tasks.flatList(index).filter((entry) => Boolean(strandFor(entry)));
         if (list.length === 0) {
           throw new Error("tasks/index.json has no tasks for this page yet.");
         }

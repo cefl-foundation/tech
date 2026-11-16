@@ -1,5 +1,19 @@
 {
   "weeks": [
+        {
+      "week": 2,
+      "title": "Robots: functions, loops and if-statements",
+      "tasks": [
+        {
+          "id": "mars-1",
+          "type": "robot",
+          "world": "mars",
+          "file": "robot/mars-1.json",
+          "title": "First drive",
+          "concept": "Calling functions"
+        }
+      ]
+    },
     {
       "week": 3,
       "title": "Python basics",
