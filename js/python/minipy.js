@@ -697,22 +697,19 @@ var MiniPy = (function () {
   //
   // yield* means: run that other generator here, and pass on its pauses.
   Runner.prototype.run = function* () {
-    var self = this;
     // define all functions first (hoisting like Python does when executed top-down is not exact, but this
     // lets `if __name__ == '__main__': main()` appear anywhere and mirrors what students see in class)
     for (var i = 0; i < this.ast.length; i++) {
       var s = this.ast[i];
       if (s.k === 'def') this.globals[s.name] = { fn: null, name: s.name, def: s };
     }
-    var calledMain = false;
 
     // Then run the other lines of the top level, from top to bottom.
     // Their variables live in globals.
     for (var j = 0; j < this.ast.length; j++) {
       var st = this.ast[j];
       if (st.k === 'def') continue;
-      if (st.k === 'if' && !calledMain) calledMain = true;
-      var sig = yield* this.execStmt(st, this.globals, true);
+      var sig = yield* this.execStmt(st, this.globals);
       if (sig && sig.type === 'return') break;
     }
     return this.out;
@@ -730,7 +727,7 @@ var MiniPy = (function () {
 
   // Run one statement. env is where its variables live: globals at the
   // top level, or the variables of the function that is running.
-  Runner.prototype.execStmt = function* (s, env, top) {
+  Runner.prototype.execStmt = function* (s, env) {
     this.tick(s.line);
     switch (s.k) {
       // pass does nothing.
