@@ -2,6 +2,7 @@
    Supports: def/return, if/elif/else, while, for..in range(), assignment (+= -= *=),
    int/float/str/bool, + - * / // % comparisons and/or/not, print/input/int/str/float/len,
    `import`/`from .. import ..` (ignored), `if __name__ == '__main__':`.
+    Python outside this range gets a message of its own kind: NotInMiniPy.
    Execution is a generator so the page can animate robot steps.            */
 var MiniPy = (function () {
   'use strict';
@@ -18,6 +19,15 @@ var MiniPy = (function () {
   // "ZeroDivisionError (line 2): division by zero"
   PyError.prototype.toString = function () { return this.kind + (this.line ? ' (line ' + this.line + ')' : '') + ': ' + this.msg; };
 
+  // Python that is real, but that this site does not have: a list, an
+  // f-string, a method. It is a PyError of a kind of its own, so that the
+  // page can show it as a calm note and not as a mistake.
+  //   what  the name of the thing, as the student will read it
+  //   tip   what to write instead, when there is something
+  function notHere(what, line, tip) {
+    return new PyError('NotInMiniPy', 'This site does not use ' + what + '. That is real Python, so you have not made a mistake.' + (tip ? ' ' + tip : ''), line);
+  }
+
   // A decimal number, such as 3.5. Python has two kinds of number, int and
   // float, but JavaScript has only one. So MiniPy keeps a whole number as a
   // plain JavaScript number and wraps a decimal number in a PyFloat. That is
@@ -28,6 +38,16 @@ var MiniPy = (function () {
   // them KW (keyword) and every other word NAME.
   var KEYWORDS = { 'def': 1, 'if': 1, 'elif': 1, 'else': 1, 'while': 1, 'for': 1, 'in': 1, 'return': 1, 'pass': 1, 'and': 1, 'or': 1, 'not': 1, 'True': 1, 'False': 1, 'None': 1, 'import': 1, 'from': 1, 'break': 1, 'continue': 1 };
 
+  // Words of real Python that this site does not use. Each has the name
+  // that the message gives it and, where there is one, a tip.
+  var NOT_HERE = {
+    'class': ['classes'],
+    'try': ['try and except'],
+    'with': ['the word "with"'],
+    'lambda': ['the word "lambda"'],
+    'global': ['the word "global"'],
+    'is': ['the word "is"', 'Use == to compare two values.']
+  };
   /* ---------------- tokenizer ---------------- */
   // The tokenizer cuts the text of a program into tokens: small labelled
   // pieces. Each token is an object with
@@ -158,8 +178,24 @@ var MiniPy = (function () {
         // letters, digits and underscores. KEYWORDS decides: KW or NAME.
         if (/[A-Za-z_]/.test(c)) {
           var nmm = /^[A-Za-z_][A-Za-z0-9_]*/.exec(line.slice(pos))[0];
+                    // The letter f with a quote straight after it starts an f-string:
+          // f"Hi {name}".
+          var follows = line[pos + nmm.length];
+          if ((nmm === 'f' || nmm === 'F') && (follows === '"' || follows === "'")) throw notHere('f-strings', ln, 'Join the pieces with + instead: "Total: " + str(total)');
+          // A word from the NOT_HERE table. hasOwnProperty asks whether the
+          // word is really in the table: every JavaScript object also has a
+          // few names of its own, such as "constructor".
+          if (NOT_HERE.hasOwnProperty(nmm)) throw notHere(NOT_HERE[nmm][0], ln, NOT_HERE[nmm][1]);
           toks.push({ t: KEYWORDS[nmm] ? 'KW' : 'NAME', v: nmm, line: ln }); pos += nmm.length; continue;
         }
+
+                // A dot with a name after it is a method, or a command from a
+        // module: word.upper(), random.randint(1, 6). The message quotes
+        // the name the student typed.
+        var dotted = c === '.' ? /^\.([A-Za-z_][A-Za-z0-9_]*)(\()?/.exec(line.slice(pos)) : null;
+        if (dotted) throw notHere('.' + dotted[1] + (dotted[2] ? '()' : '') + ' or anything else that follows a dot', ln);
+        // Two stars are Python's sign for a power: 2 ** 3.
+        if (line.substr(pos, 2) === '**') throw notHere('** for powers', ln, 'Multiply instead: 2 ** 3 is 2 * 2 * 2');
 
         // Anything else must be one of these symbols. The list is tried in
         // order, so the longer symbols come first: "//=" before "//", and
@@ -370,11 +406,16 @@ var MiniPy = (function () {
   Parser.prototype.orExpr = function () { var l = this.andExpr(); while (this.is('KW', 'or')) { var t = this.next(); l = { k: 'bool', op: 'or', l: l, r: this.andExpr(), line: t.line }; } return l; };
   Parser.prototype.andExpr = function () { var l = this.notExpr(); while (this.is('KW', 'and')) { var t = this.next(); l = { k: 'bool', op: 'and', l: l, r: this.notExpr(), line: t.line }; } return l; };
   Parser.prototype.notExpr = function () { if (this.is('KW', 'not')) { var t = this.next(); return { k: 'not', e: this.notExpr(), line: t.line }; } return this.compare(); };
-  // Two comparisons in a row, as in  0 <= mark <= 100, are read as
-  // (0 <= mark) <= 100. Python reads them differently.
+  // Two comparisons in a row, as in  0 <= mark <= 100, mean "both are
+  // true" in Python. MiniPy has no node for that, so it says so. Reading
+  // them as (0 <= mark) <= 100 would give a wrong answer with no warning.
   Parser.prototype.compare = function () {
-    var l = this.arith();
-    while (this.is('OP') && ['==', '!=', '<', '>', '<=', '>='].indexOf(this.peek().v) >= 0) { var t = this.next(); l = { k: 'bin', op: t.v, l: l, r: this.arith(), line: t.line }; }
+        var l = this.arith(), count = 0;
+    while (this.is('OP') && ['==', '!=', '<', '>', '<=', '>='].indexOf(this.peek().v) >= 0) {
+      var t = this.next();
+      if (++count > 1) throw notHere('two comparisons in a row, as in 0 <= mark <= 100', t.line, 'Join two comparisons with and: mark >= 0 and mark <= 100');
+      l = { k: 'bin', op: t.v, l: l, r: this.arith(), line: t.line };
+    }
     // A single = here is the classic slip:  if steps = 3:
     if (this.is('OP', '=')) throw new PyError('SyntaxError', 'a single "=" assigns a value. To compare two values use "==" (two equals signs).', this.peek().line);
     return l;
@@ -382,8 +423,14 @@ var MiniPy = (function () {
   Parser.prototype.arith = function () { var l = this.term(); while (this.is('OP', '+') || this.is('OP', '-')) { var t = this.next(); l = { k: 'bin', op: t.v, l: l, r: this.term(), line: t.line }; } return l; };
   Parser.prototype.term = function () { var l = this.factor(); while (this.is('OP') && ['*', '/', '//', '%'].indexOf(this.peek().v) >= 0) { var t = this.next(); l = { k: 'bin', op: t.v, l: l, r: this.factor(), line: t.line }; } return l; };
   // -5 becomes { k: 'unary', op: '-', e: the node for 5 }.
-  Parser.prototype.factor = function () { if (this.is('OP', '-') || this.is('OP', '+')) { var t = this.next(); return { k: 'unary', op: t.v, e: this.factor(), line: t.line }; } return this.atom(); };
-
+  Parser.prototype.factor = function () {
+    if (this.is('OP', '-') || this.is('OP', '+')) { var t = this.next(); return { k: 'unary', op: t.v, e: this.factor(), line: t.line }; }
+    var value = this.atom();
+    // Square brackets straight after a value pick one item out of it:
+    // word[0]. The tip is for a student who meant round brackets.
+    if (this.is('OP', '[')) throw notHere('square brackets after a name, as in word[0]', this.peek().line, 'To call a function, use round brackets: move()');
+    return value;
+  };
   // The bottom of the ladder: the smallest values.
   Parser.prototype.atom = function () {
     var p = this.next();
@@ -415,6 +462,8 @@ var MiniPy = (function () {
       // A name on its own: most often a variable.
       return { k: 'name', v: p.v, line: p.line };
     }
+    // A value that starts with a square bracket is a list: [1, 2, 3].
+    if (p.t === 'OP' && p.v === '[') throw notHere('lists', p.line);
     // Anything else cannot start a value.
     if (p.t === 'KW') throw new PyError('SyntaxError', '"' + p.v + '" cannot be used here', p.line);
     var got = p.t === 'NEWLINE' ? 'the end of the line' : p.t === 'EOF' ? 'the end of the file' : p.t === 'INDENT' ? 'an indented line' : p.t === 'DEDENT' ? 'the end of the block' : '"' + p.v + '"';
